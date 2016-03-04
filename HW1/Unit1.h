@@ -33,6 +33,9 @@ __published:	// IDE-managed Components
           TShiftState Shift);
     void __fastcall edInsertIntoBSTKeyPress(TObject *Sender, char &Key);
     void __fastcall btDeletefromBSTClick(TObject *Sender);
+    void __fastcall edDeleteFromBSTKeyDown(TObject *Sender, WORD &Key,
+          TShiftState Shift);
+    void __fastcall edDeleteFromBSTKeyPress(TObject *Sender, char &Key);
 private:	// User declarations
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);

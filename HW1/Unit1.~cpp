@@ -97,4 +97,33 @@ void __fastcall TForm1::edInsertIntoBSTKeyPress(TObject *Sender, char &Key)
         Key=0;
 }
 //---------------------------------------------------------------------------
+//define function
+struct BTreeNode *BSTDelete(struct BTreeNode *node, int deleteData)
+{
+    struct BTreeNode *temp;
+
+    if(node == NULL)
+        return node;
+    else if(deleteData > node->iData)
+        node->btrnRightChild = BSTDelete(node->btrnRightChild, deleteData);
+    else if(deleteData < node->iData)
+        node->btrnLeftChild = BSTDelete(node->btrnLeftChild, deleteData);
+    else
+        {
+
+        }
+    return node;
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::btDeletefromBSTClick(TObject *Sender)
+{
+    btrnRoot = BSTDelete(btrnRoot, StrToInt(edDeleteFromBST->Text));
+
+    String answer;
+    BSTInorderTraversal(btrnRoot, answer);
+
+    Memo1->Lines->Add(answer);
+
+}
+//---------------------------------------------------------------------------
 

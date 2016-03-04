@@ -86,6 +86,7 @@ object Form1: TForm1
         Height = 25
         Caption = 'Delete from BST'
         TabOrder = 3
+        OnClick = btDeletefromBSTClick
       end
       object trbNumOfInteger: TTrackBar
         Left = 8

@@ -78,6 +78,8 @@ object Form1: TForm1
         Height = 21
         TabOrder = 2
         Text = '100'
+        OnKeyDown = edDeleteFromBSTKeyDown
+        OnKeyPress = edDeleteFromBSTKeyPress
       end
       object btDeletefromBST: TButton
         Left = 16

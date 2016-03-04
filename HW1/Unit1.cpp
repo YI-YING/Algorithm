@@ -34,7 +34,7 @@ void __fastcall TForm1::trbRangeChange(TObject *Sender)
     edRange->Text = trbRange->Position;
 }
 //---------------------------------------------------------------------------
-//define function
+//define function NewBSTNode,BSTInsert,BSTInorderTraversal
 struct BTreeNode *NewBSTNode(int insertData)
 {
     struct BTreeNode *btreenode = new struct BTreeNode;
@@ -44,6 +44,7 @@ struct BTreeNode *NewBSTNode(int insertData)
 
     return btreenode;
 }
+//---------------------------------------------------------------------------
 struct BTreeNode *BSTInsert(struct BTreeNode *node, int insertData)
 {
     if (node == NULL)
@@ -56,6 +57,7 @@ struct BTreeNode *BSTInsert(struct BTreeNode *node, int insertData)
 
     return node;
 }
+//---------------------------------------------------------------------------
 void BSTInorderTraversal(struct BTreeNode *node, String &answer)
 {
     if (node != NULL)
@@ -68,7 +70,17 @@ void BSTInorderTraversal(struct BTreeNode *node, String &answer)
 //---------------------------------------------------------------------------
 void __fastcall TForm1::btInsertIntoBSTClick(TObject *Sender)
 {
-    btrnRoot = BSTInsert(btrnRoot, StrToInt(edInsertIntoBST->Text));
+    int iInsertData;
+    try
+        {
+        iInsertData = StrToInt(edInsertIntoBST->Text);
+        }
+    catch (...)
+        {
+        ShowMessage("Please enter an integer !");
+        return ;
+        }
+    btrnRoot = BSTInsert(btrnRoot, iInsertData);
 
     String answer;
     BSTInorderTraversal(btrnRoot, answer);
@@ -81,7 +93,17 @@ void __fastcall TForm1::edInsertIntoBSTKeyDown(TObject *Sender, WORD &Key,
 {
     if (Key == VK_RETURN)
         {
-        btrnRoot = BSTInsert(btrnRoot, StrToInt(edInsertIntoBST->Text));
+        int iInsertData;
+        try
+            {
+            iInsertData = StrToInt(edInsertIntoBST->Text);
+            }
+        catch (...)
+            {
+            ShowMessage("Please enter an integer !");
+            return ;
+            }
+        btrnRoot = BSTInsert(btrnRoot, iInsertData);
 
         String answer;
         BSTInorderTraversal(btrnRoot, answer);
@@ -97,21 +119,101 @@ void __fastcall TForm1::edInsertIntoBSTKeyPress(TObject *Sender, char &Key)
         Key=0;
 }
 //---------------------------------------------------------------------------
-//define function
+//define function BSTFindSucc,BSTDelete
+struct BTreeNode *BSTFindSucc(struct BTreeNode *node)
+{
+    while (node->btrnLeftChild != NULL)
+        node = node->btrnLeftChild;
+    return node;
+}
+//---------------------------------------------------------------------------
 struct BTreeNode *BSTDelete(struct BTreeNode *node, int deleteData)
 {
+    struct BTreeNode *temp;
+
+    if (node == NULL)
+        return node;
+    else if (deleteData > node->iData)
+        node->btrnRightChild = BSTDelete(node->btrnRightChild, deleteData);
+    else if (deleteData < node->iData)
+        node->btrnLeftChild = BSTDelete(node->btrnLeftChild, deleteData);
+    else
+        {
+        if (node->btrnLeftChild == NULL || node->btrnRightChild == NULL)
+            {
+            temp = node->btrnLeftChild ? node->btrnLeftChild : node->btrnRightChild;
+            if (temp == NULL)
+                {
+                temp = node;
+                node = NULL;
+                }
+            else
+                *node = *temp;
+            free(temp);
+            }
+        else
+            {
+            temp = BSTFindSucc(node->btrnRightChild);
+            node->iData = temp->iData;
+            node->btrnRightChild = BSTDelete(node->btrnRightChild, temp->iData);
+            }
+        }
     return node;
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::btDeletefromBSTClick(TObject *Sender)
 {
-    btrnRoot = BSTDelete(btrnRoot, StrToInt(edDeleteFromBST->Text));
+    int iDeleteData;
+    try
+        {
+        iDeleteData = StrToInt(edDeleteFromBST->Text);
+        }
+    catch (...)
+        {
+        ShowMessage("Please enter an integer !");
+        return ;
+        }
+    btrnRoot = BSTDelete(btrnRoot, iDeleteData);
 
     String answer;
     BSTInorderTraversal(btrnRoot, answer);
+    if (answer == "")
+        answer = "All data have been cleared !";
 
     Memo1->Lines->Add(answer);
 
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::edDeleteFromBSTKeyDown(TObject *Sender, WORD &Key,
+      TShiftState Shift)
+{
+    if (Key == VK_RETURN)
+        {
+        int iDeleteData;
+        try
+            {
+            iDeleteData = StrToInt(edDeleteFromBST->Text);
+            }
+        catch (...)
+            {
+            ShowMessage("Please enter an integer !");
+            return ;
+            }
+        btrnRoot = BSTDelete(btrnRoot, iDeleteData);
+
+        String answer;
+        BSTInorderTraversal(btrnRoot, answer);
+        if (answer == "")
+            answer = "All data have been cleared !";
+
+        Memo1->Lines->Add(answer);
+        }
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::edDeleteFromBSTKeyPress(TObject *Sender, char &Key)
+{
+    if ((Key<48 || Key>57) && Key!=8)
+        Key=0;
 }
 //---------------------------------------------------------------------------
 
