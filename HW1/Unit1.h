@@ -32,6 +32,7 @@ __published:	// IDE-managed Components
     void __fastcall edInsertIntoBSTKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
     void __fastcall edInsertIntoBSTKeyPress(TObject *Sender, char &Key);
+    void __fastcall btDeletefromBSTClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
