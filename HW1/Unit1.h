@@ -26,6 +26,13 @@ __published:	// IDE-managed Components
     TEdit *edRange;
     TButton *btRandom;
     TMemo *Memo1;
+    TButton *btPreorder;
+    TButton *btPostOrder;
+    TButton *btLevelOrder;
+    TLabel *Label3;
+    TButton *btPrefix;
+    TButton *btInfix;
+    TButton *btPostfix;
     void __fastcall trbNumOfIntegerChange(TObject *Sender);
     void __fastcall trbRangeChange(TObject *Sender);
     void __fastcall btInsertIntoBSTClick(TObject *Sender);
@@ -36,6 +43,17 @@ __published:	// IDE-managed Components
     void __fastcall edDeleteFromBSTKeyDown(TObject *Sender, WORD &Key,
           TShiftState Shift);
     void __fastcall edDeleteFromBSTKeyPress(TObject *Sender, char &Key);
+    void __fastcall btRandomClick(TObject *Sender);
+    void __fastcall edNumOfIntegerChange(TObject *Sender);
+    void __fastcall edNumOfIntegerKeyPress(TObject *Sender, char &Key);
+    void __fastcall edRangeChange(TObject *Sender);
+    void __fastcall edRangeKeyPress(TObject *Sender, char &Key);
+    void __fastcall btPreorderClick(TObject *Sender);
+    void __fastcall btPostOrderClick(TObject *Sender);
+    void __fastcall btLevelOrderClick(TObject *Sender);
+    void __fastcall btPrefixClick(TObject *Sender);
+    void __fastcall btInfixClick(TObject *Sender);
+    void __fastcall btPostfixClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
