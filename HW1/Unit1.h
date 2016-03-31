@@ -8,6 +8,7 @@
 #include <StdCtrls.hpp>
 #include <Forms.hpp>
 #include <ComCtrls.hpp>
+#include <ExtCtrls.hpp>
 //---------------------------------------------------------------------------
 class TForm1 : public TForm
 {
@@ -33,6 +34,22 @@ __published:	// IDE-managed Components
     TButton *btPrefix;
     TButton *btInfix;
     TButton *btPostfix;
+    TTabSheet *TabSheet2;
+    TEdit *edInsert;
+    TButton *btInsert;
+    TMemo *Memo2;
+    TComboBox *cbTreeTraversal;
+    TGroupBox *GroupBox1;
+    TGroupBox *GroupBox2;
+    TButton *btTreeTraversal;
+    TGroupBox *GroupBox3;
+    TLabel *lblElementNum;
+    TLabel *lblLevelHeight;
+    TLabel *lblStatus;
+    TButton *btResetTree;
+    TTabSheet *TabSheet3;
+    TImage *imDrawTree;
+    TButton *btDraw_BT_C;
     void __fastcall trbNumOfIntegerChange(TObject *Sender);
     void __fastcall trbRangeChange(TObject *Sender);
     void __fastcall btInsertIntoBSTClick(TObject *Sender);
@@ -54,6 +71,10 @@ __published:	// IDE-managed Components
     void __fastcall btPrefixClick(TObject *Sender);
     void __fastcall btInfixClick(TObject *Sender);
     void __fastcall btPostfixClick(TObject *Sender);
+    void __fastcall btInsertClick(TObject *Sender);
+    void __fastcall btTreeTraversalClick(TObject *Sender);
+    void __fastcall btResetTreeClick(TObject *Sender);
+    void __fastcall btDraw_BT_CClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);

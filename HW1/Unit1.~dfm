@@ -18,9 +18,9 @@ object Form1: TForm1
     Top = 0
     Width = 657
     Height = 587
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     Align = alClient
-    TabIndex = 0
+    TabIndex = 2
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'BST'
@@ -234,6 +234,136 @@ object Form1: TForm1
         Height = 17
         Caption = 'Postfix'
         TabOrder = 15
+        OnClick = btPostfixClick
+      end
+    end
+    object TabSheet2: TTabSheet
+      Caption = 'Could Input Character'
+      ImageIndex = 1
+      object Memo2: TMemo
+        Left = 152
+        Top = 0
+        Width = 497
+        Height = 559
+        Align = alRight
+        Lines.Strings = (
+          'Memo2')
+        TabOrder = 0
+      end
+      object GroupBox1: TGroupBox
+        Left = 0
+        Top = 0
+        Width = 145
+        Height = 89
+        Caption = 'Insert Operation'
+        TabOrder = 1
+        object edInsert: TEdit
+          Left = 8
+          Top = 20
+          Width = 121
+          Height = 21
+          BiDiMode = bdLeftToRight
+          ParentBiDiMode = False
+          TabOrder = 0
+          Text = '(A+B)*C/(D+E)'
+        end
+        object btInsert: TButton
+          Left = 8
+          Top = 48
+          Width = 121
+          Height = 25
+          Caption = 'Insert'
+          TabOrder = 1
+          OnClick = btInsertClick
+        end
+      end
+      object GroupBox2: TGroupBox
+        Left = 0
+        Top = 96
+        Width = 145
+        Height = 97
+        Caption = 'Tree Traversal'
+        TabOrder = 2
+        object cbTreeTraversal: TComboBox
+          Left = 5
+          Top = 20
+          Width = 135
+          Height = 21
+          ItemHeight = 13
+          TabOrder = 0
+          Text = 'Preorder Traversal'
+          Items.Strings = (
+            'Preorder Traversal'
+            'Inorder Traversal'
+            'Postorder Traversal')
+        end
+        object btTreeTraversal: TButton
+          Left = 4
+          Top = 53
+          Width = 135
+          Height = 25
+          Caption = 'Tree Traversal'
+          TabOrder = 1
+          OnClick = btTreeTraversalClick
+        end
+      end
+      object GroupBox3: TGroupBox
+        Left = 0
+        Top = 216
+        Width = 145
+        Height = 121
+        Caption = 'Tree State'
+        TabOrder = 3
+        object lblElementNum: TLabel
+          Left = 11
+          Top = 20
+          Width = 69
+          Height = 13
+          Caption = 'Element Num :'
+        end
+        object lblLevelHeight: TLabel
+          Left = 11
+          Top = 39
+          Width = 66
+          Height = 13
+          Caption = 'Level Height :'
+        end
+        object lblStatus: TLabel
+          Left = 11
+          Top = 60
+          Width = 36
+          Height = 13
+          Caption = 'Status :'
+        end
+        object btResetTree: TButton
+          Left = 13
+          Top = 85
+          Width = 121
+          Height = 25
+          Caption = 'Reset Tree'
+          TabOrder = 0
+          OnClick = btResetTreeClick
+        end
+      end
+      object btDraw_BT_C: TButton
+        Left = 8
+        Top = 448
+        Width = 121
+        Height = 25
+        Caption = 'Draw Tree'
+        TabOrder = 4
+        OnClick = btDraw_BT_CClick
+      end
+    end
+    object TabSheet3: TTabSheet
+      Caption = 'Draw Tree'
+      ImageIndex = 2
+      object imDrawTree: TImage
+        Left = 0
+        Top = 0
+        Width = 649
+        Height = 559
+        Align = alClient
       end
     end
   end
