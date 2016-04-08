@@ -100,6 +100,7 @@ object Form1: TForm1
         Height = 41
         Caption = 'Inorder Traversal'
         TabOrder = 2
+        OnClick = btInorderClick
       end
       object btInorderNR: TButton
         Left = 336
@@ -108,6 +109,7 @@ object Form1: TForm1
         Height = 41
         Caption = 'Inorder Traversal (none recursive)'
         TabOrder = 3
+        OnClick = btInorderNRClick
       end
       object btInsertion: TButton
         Left = 336

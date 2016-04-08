@@ -123,14 +123,27 @@ void ShowResult()
         }
 }
 //---------------------------------------------------------------------------
-//implementation Thread Method
-_fastcall TMyThread::TMyThread(void):TThread(true)
+//implementation Heap Thread Constructor & Method
+__fastcall THeapThread::THeapThread(void):TThread(true)
 {
     FreeOnTerminate=true;
     Resume();
 }
 //---------------------------------------------------------------------------
-void __fastcall TMyThread::Execute()//°õ¦æºü function
+//define function ButtonEnable
+void ButtonEnable(bool state)
+{
+    Form1->btRandom->Enabled = state;
+    Form1->btHeap->Enabled = state;
+    Form1->btInorder->Enabled = state;
+    Form1->btInorderNR->Enabled = state;
+    Form1->btSelection->Enabled = state;
+    Form1->btInsertion->Enabled = state;
+    Form1->btBubble->Enabled = state;
+    Form1->btQuick->Enabled = state;
+}
+//---------------------------------------------------------------------------
+void __fastcall THeapThread::Execute()
 {
     clock_t ckStart = clock();
 
@@ -143,13 +156,17 @@ void __fastcall TMyThread::Execute()//°õ¦æºü function
     float fCostTime = float(ckEnd - ckStart)/CLK_TCK;
     Form1->lblCPUTime->Caption = "CPU Time(s) = " + FloatToStr(fCostTime);
 
+    DataClear(&iHeap);
+
+    ButtonEnable(true);
+
     ShowResult();
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::btHeapClick(TObject *Sender)
 {
-    if (iHeap != NULL)
-        DataClear(&iHeap);
+    ButtonEnable(false);
+
     iHeap = new int[uiNum+1];
 
     if (iResultData != NULL)
@@ -158,8 +175,239 @@ void __fastcall TForm1::btHeapClick(TObject *Sender)
 
     lblCPUTime->Caption = "CPU Time(s) = Sorting ...";
 
-    TMyThread *MyThread;
-    MyThread = new TMyThread();
+    THeapThread *HeapThread;
+    HeapThread = new THeapThread();
 }
 //---------------------------------------------------------------------------
+//define struct BTreeNode
+struct BTreeNode
+    {
+    struct BTreeNode *btrnLeftChild;
+    int iData;
+    struct BTreeNode *btrnRightChild;
+    };
+struct BTreeNode *btrnRoot;
+//---------------------------------------------------------------------------
+//define function NewNode,AddNode
+struct BTreeNode *NewNode(int x)
+{
+    struct BTreeNode *btrnNew = new struct BTreeNode;
+    btrnNew->btrnLeftChild = NULL;
+    btrnNew->iData = x;
+    btrnNew->btrnRightChild = NULL;
+
+    return btrnNew;
+}
+//---------------------------------------------------------------------------
+struct BTreeNode *AddNode(struct BTreeNode *node, int x)
+{
+    if (node == NULL)
+        return NewNode(x);
+    if (x < node->iData)
+        node->btrnLeftChild = AddNode(node->btrnLeftChild, x);
+    else
+        node->btrnRightChild = AddNode(node->btrnRightChild, x);
+    return node;
+}
+//---------------------------------------------------------------------------
+//define function InorderTraversl,DeleteNode,NodeClear
+void InorderTraversal(struct BTreeNode *node)
+{
+    if (node != NULL)
+        {
+        InorderTraversal(node->btrnLeftChild);
+        iResultData[i++] = node->iData;
+        InorderTraversal(node->btrnRightChild);
+        }
+}
+//---------------------------------------------------------------------------
+struct BTreeNode *DeleteNode(struct BTreeNode *node)
+{
+    struct BTreeNode *Old = node;
+    node = NULL;
+
+    free(Old);
+    return node;
+}
+//---------------------------------------------------------------------------
+struct BTreeNode *NodeClear(struct BTreeNode *node)
+{
+    if (node != NULL)
+        {
+        node->btrnLeftChild = NodeClear(node->btrnLeftChild);
+        node->btrnRightChild = NodeClear(node->btrnRightChild);
+
+        node = DeleteNode(node);
+
+        return node;
+        }
+}
+//---------------------------------------------------------------------------
+//implementation Inorder Thread Constructor & Method
+__fastcall TInorderThread::TInorderThread(void):TThread(true)
+{
+    FreeOnTerminate=true;
+    Resume();
+}
+//---------------------------------------------------------------------------
+void __fastcall TInorderThread::Execute()
+{
+    clock_t ckStart = clock();
+
+    for (i = 0; i < uiNum; i++)
+        btrnRoot = AddNode(btrnRoot,iRandomData[i]);
+    i = 0;
+    InorderTraversal(btrnRoot);
+
+    clock_t ckEnd = clock();
+    float fCostTime = float(ckEnd - ckStart)/CLK_TCK;
+    Form1->lblCPUTime->Caption = "CPU Time(s) = " + FloatToStr(fCostTime);
+
+    btrnRoot = NodeClear(btrnRoot);
+
+    ButtonEnable(true);
+
+    ShowResult();
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::btInorderClick(TObject *Sender)
+{
+    ButtonEnable(false);
+
+    if (iResultData != NULL)
+        DataClear(&iResultData);
+    iResultData = new int[uiNum];
+
+    lblCPUTime->Caption = "CPU Time(s) = Sorting ...";
+
+    TInorderThread *InorderThread;
+    InorderThread = new TInorderThread();
+}
+//---------------------------------------------------------------------------
+//define struct StackNode
+struct StackNode
+    {
+    struct StackNode *snNext;
+    struct BTreeNode *btrnTreeNode;
+    };
+struct StackNode *snTop;
+//---------------------------------------------------------------------------
+//define function PushNode,PopNode
+void PushNode(struct BTreeNode *node)
+{
+    struct StackNode *snOld = snTop;
+
+    snTop = new struct StackNode;
+    snTop->snNext = snOld;
+    snTop->btrnTreeNode = node;
+}
+//---------------------------------------------------------------------------
+struct BTreeNode *PopNode()
+{
+    if (snTop == NULL)
+        return NULL;
+    struct BTreeNode *btrn = snTop->btrnTreeNode;
+    struct StackNode *snOld = snTop;
+
+    snTop = snTop->snNext;
+    free(snOld);
+
+    return btrn;
+}
+//---------------------------------------------------------------------------
+//define function InorderTraversalNR, AddNodeNR
+void InorderTraversalNR(struct BTreeNode *node)
+{
+    do
+        {
+        while (node != NULL)
+            {
+            PushNode(node);
+            node = node->btrnLeftChild;
+            }
+        if (snTop != NULL)
+            {
+            node = PopNode();
+            iResultData[i++] = node->iData;
+            node = node->btrnRightChild;
+            }
+        }
+    while (snTop != NULL || node != NULL);
+}
+//---------------------------------------------------------------------------
+void AddNode(int x)
+{
+    struct BTreeNode *btrnTemp,*btrnParent;
+    btrnTemp = btrnRoot; btrnParent = NULL;
+
+    while (btrnTemp != NULL)
+        {
+        btrnParent = btrnTemp;
+
+        btrnTemp = x < btrnTemp->iData ?
+            btrnTemp->btrnLeftChild : btrnTemp->btrnRightChild;
+        }
+    btrnTemp = NewNode(x);
+
+    if (btrnParent == NULL)
+        {
+        btrnRoot = btrnTemp;
+        return ;
+        }
+
+    if (x < btrnParent->iData)
+        btrnParent->btrnLeftChild = btrnTemp;
+    else
+        btrnParent->btrnRightChild = btrnTemp;
+}
+//---------------------------------------------------------------------------
+//define struct QueueNode, function AddQueue,DeleteQueue
+struct QueueNode
+    {
+    struct QueueNode *qnNext;
+    struct BTreeNode *btrnTreeNode;
+    };
+//---------------------------------------------------------------------------
+//implementation Inorder Thread Constructor & Method
+__fastcall TInorderNRThread::TInorderNRThread(void):TThread(true)
+{
+    FreeOnTerminate = true;
+    Resume();
+}
+//---------------------------------------------------------------------------
+void __fastcall TInorderNRThread::Execute(void)
+{
+    clock_t ckStart = clock();
+
+    for (i = 0; i < uiNum; i++)
+        AddNode(iRandomData[i]);
+    i = 0;
+    InorderTraversalNR(btrnRoot);
+
+    clock_t ckEnd = clock();
+    float fCostTime = float(ckEnd - ckStart)/CLK_TCK;
+    Form1->lblCPUTime->Caption = "CPU Time(s) = " + FloatToStr(fCostTime);
+
+    btrnRoot = NodeClear(btrnRoot);
+
+    ButtonEnable(true);
+
+    ShowResult();
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::btInorderNRClick(TObject *Sender)
+{
+    ButtonEnable(false);
+
+    if (iResultData != NULL)
+        DataClear(&iResultData);
+    iResultData = new int[uiNum];
+
+    lblCPUTime->Caption = "CPU Time(s) = Sorting ...";
+
+    TInorderNRThread *InorderNRThread;
+    InorderNRThread = new TInorderNRThread();
+}
+//---------------------------------------------------------------------------
+
 

@@ -36,6 +36,8 @@ __published:	// IDE-managed Components
     void __fastcall edRangeKeyPress(TObject *Sender, char &Key);
     void __fastcall btRandomClick(TObject *Sender);
     void __fastcall btHeapClick(TObject *Sender);
+    void __fastcall btInorderClick(TObject *Sender);
+    void __fastcall btInorderNRClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
     __fastcall TForm1(TComponent* Owner);
@@ -53,13 +55,29 @@ int* iRandomData, *iResultData;
 // Array heap
 int *iHeap;
 //---------------------------------------------------------------------------
-//宣告執行緒類別
-class TMyThread:public TThread
-{
-public:
-    __fastcall TMyThread(void);
-private:
-    void __fastcall Execute(void);
-};
+//declare Heap Thread, Inorder Thread
+class THeapThread:public TThread
+    {
+    public:
+        __fastcall THeapThread(void);
+    private:
+        void __fastcall Execute(void);
+    };
+//---------------------------------------------------------------------------
+class TInorderThread:public TThread
+    {
+    public:
+        __fastcall TInorderThread(void);
+    private:
+        void __fastcall Execute(void);
+    };
+//---------------------------------------------------------------------------
+class TInorderNRThread:public TThread
+    {
+    public:
+        __fastcall TInorderNRThread(void);
+    private:
+        void __fastcall Execute(void);
+    };
 //---------------------------------------------------------------------------
 #endif
