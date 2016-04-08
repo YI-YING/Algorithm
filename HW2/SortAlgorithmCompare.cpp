@@ -37,20 +37,20 @@ void __fastcall TForm1::edRangeKeyPress(TObject *Sender, char &Key)
 }
 //---------------------------------------------------------------------------
 //define function DataClear, AddRandomData
-void DataClear(int **data)
+void DataClear(unsigned int **data)
 {
-    int *iOld = *data;
+    unsigned int *uiOld = *data;
     *data = NULL;
-    free(iOld);
+    free(uiOld);
 }
 //---------------------------------------------------------------------------
-void AddRandomData(int **array)
+void AddRandomData(unsigned int **array)
 {
-    int *iNew = new int[uiNum];
+    unsigned int *uiNew = new unsigned int[uiNum];
     for (i = 0; i < uiNum; i++)
-        iNew[i] = rand() % uiRange + 1;
+        uiNew[i] = rand() % uiRange + 1;
 
-    *array = iNew;
+    *array = uiNew;
 }
 //---------------------------------------------------------------------------
 // define function ShowRandomData
@@ -60,7 +60,7 @@ void ShowRandomData()
     if (Form1->cbShowData->Checked)
         {
         for (i = 0; i < uiNum; i++)
-            Form1->Memo1->Lines->Add(IntToStr(i+1)+":\t"+StrToInt(iRandomData[i]));
+            Form1->Memo1->Lines->Add(IntToStr(i+1)+":\t"+StrToInt(uiRandomData[i]));
         }
 }
 //---------------------------------------------------------------------------
@@ -69,44 +69,44 @@ void __fastcall TForm1::btRandomClick(TObject *Sender)
     uiNum = StrToInt(edNum->Text);
     uiRange = StrToInt(edRange->Text);
 
-    if (iRandomData != NULL)
-        DataClear(&iRandomData);
-    AddRandomData(&iRandomData);
+    if (uiRandomData != NULL)
+        DataClear(&uiRandomData);
+    AddRandomData(&uiRandomData);
 
     ShowRandomData();
 
 }
 //---------------------------------------------------------------------------
 //define function InsertHeap, DeleteHeap
-int iHeapNum = 0;
-void InsertHeap(int x)
+unsigned int uiHeapNum = 0;
+void InsertHeap(unsigned int x)
 {
-    iHeapNum++;
-    int i = iHeapNum;
+    uiHeapNum++;
+    unsigned int i = uiHeapNum;
 
-    while (i > 1 && x < iHeap[i/2])
+    while (i > 1 && x < uiHeap[i/2])
         {
-        iHeap[i] = iHeap[i/2];
+        uiHeap[i] = uiHeap[i/2];
         i/=2;
         }
-    iHeap[i] = x;
+    uiHeap[i] = x;
 }
 //---------------------------------------------------------------------------
-int DeleteHeap()
+unsigned int DeleteHeap()
 {
-    int i,j,x;
+    unsigned int i,j,x;
 
-    x = iHeap[1];
-    iHeap[1] = iHeap[iHeapNum];
-    iHeapNum--;
+    x = uiHeap[1];
+    uiHeap[1] = uiHeap[uiHeapNum];
+    uiHeapNum--;
     i = 1;
 
-    while (i <= iHeapNum/2)
+    while (i <= uiHeapNum/2)
         {
-        j = iHeap[2*i] < iHeap[2*i +1] ? 2*i : 2*i +1;
+        j = uiHeap[2*i] < uiHeap[2*i +1] ? 2*i : 2*i +1;
 
-        if (iHeap[i] < iHeap[j]) break;
-        swap(iHeap[i], iHeap[j]);
+        if (uiHeap[i] < uiHeap[j]) break;
+        swap(uiHeap[i], uiHeap[j]);
         i = j;
         }
     return x;
@@ -119,7 +119,7 @@ void ShowResult()
     if (Form1->cbShowResult->Checked)
         {
         for (i = 0; i < uiNum; i++)
-            Form1->Memo2->Lines->Add(IntToStr(i+1)+":\t"+StrToInt(iResultData[i]));
+            Form1->Memo2->Lines->Add(IntToStr(i+1)+":\t"+StrToInt(uiResultData[i]));
         }
 }
 //---------------------------------------------------------------------------
@@ -148,17 +148,17 @@ void __fastcall THeapThread::Execute()
     clock_t ckStart = clock();
 
     for (i = 0; i < uiNum; i++)
-        InsertHeap(iRandomData[i]);
+        InsertHeap(uiRandomData[i]);
     for (i = 0; i < uiNum; i++)
-        iResultData[i] = DeleteHeap();
+        uiResultData[i] = DeleteHeap();
 
     clock_t ckEnd = clock();
     float fCostTime = float(ckEnd - ckStart)/CLK_TCK;
 
-    DataClear(&iHeap);
+    DataClear(&uiHeap);
 
     ShowResult();
-    DataClear(&iResultData);
+    DataClear(&uiResultData);
 
     Form1->lblCPUTime->Caption = "CPU Time(s) = " + FloatToStr(fCostTime);
     ButtonEnable(true);
@@ -168,9 +168,9 @@ void __fastcall TForm1::btHeapClick(TObject *Sender)
 {
     ButtonEnable(false);
 
-    iHeap = new int[uiNum+1];
+    uiHeap = new unsigned int[uiNum+1];
 
-    iResultData = new int[uiNum];
+    uiResultData = new unsigned int[uiNum];
 
     lblCPUTime->Caption = "CPU Time(s) = Sorting ...";
 
@@ -182,27 +182,27 @@ void __fastcall TForm1::btHeapClick(TObject *Sender)
 struct BTreeNode
     {
     struct BTreeNode *btrnLeftChild;
-    int iData;
+    unsigned int uiData;
     struct BTreeNode *btrnRightChild;
     };
 struct BTreeNode *btrnRoot;
 //---------------------------------------------------------------------------
 //define function NewNode,AddNode
-struct BTreeNode *NewNode(int x)
+struct BTreeNode *NewNode(unsigned int x)
 {
     struct BTreeNode *btrnNew = new struct BTreeNode;
     btrnNew->btrnLeftChild = NULL;
-    btrnNew->iData = x;
+    btrnNew->uiData = x;
     btrnNew->btrnRightChild = NULL;
 
     return btrnNew;
 }
 //---------------------------------------------------------------------------
-struct BTreeNode *AddNode(struct BTreeNode *node, int x)
+struct BTreeNode *AddNode(struct BTreeNode *node, unsigned int x)
 {
     if (node == NULL)
         return NewNode(x);
-    if (x < node->iData)
+    if (x < node->uiData)
         node->btrnLeftChild = AddNode(node->btrnLeftChild, x);
     else
         node->btrnRightChild = AddNode(node->btrnRightChild, x);
@@ -215,7 +215,7 @@ void InorderTraversal(struct BTreeNode *node)
     if (node != NULL)
         {
         InorderTraversal(node->btrnLeftChild);
-        iResultData[i++] = node->iData;
+        uiResultData[i++] = node->uiData;
         InorderTraversal(node->btrnRightChild);
         }
 }
@@ -254,7 +254,7 @@ void __fastcall TInorderThread::Execute()
     clock_t ckStart = clock();
 
     for (i = 0; i < uiNum; i++)
-        btrnRoot = AddNode(btrnRoot,iRandomData[i]);
+        btrnRoot = AddNode(btrnRoot,uiRandomData[i]);
     i = 0;
     InorderTraversal(btrnRoot);
 
@@ -264,7 +264,7 @@ void __fastcall TInorderThread::Execute()
     btrnRoot = NodeClear(btrnRoot);
 
     ShowResult();
-    DataClear(&iResultData);
+    DataClear(&uiResultData);
 
     Form1->lblCPUTime->Caption = "CPU Time(s) = " + FloatToStr(fCostTime);
     ButtonEnable(true);
@@ -274,7 +274,7 @@ void __fastcall TForm1::btInorderClick(TObject *Sender)
 {
     ButtonEnable(false);
 
-    iResultData = new int[uiNum];
+    uiResultData = new unsigned int[uiNum];
 
     lblCPUTime->Caption = "CPU Time(s) = Sorting ...";
 
@@ -326,14 +326,14 @@ void InorderTraversalNR(struct BTreeNode *node)
         if (snTop != NULL)
             {
             node = PopNode();
-            iResultData[i++] = node->iData;
+            uiResultData[i++] = node->uiData;
             node = node->btrnRightChild;
             }
         }
     while (snTop != NULL || node != NULL);
 }
 //---------------------------------------------------------------------------
-void AddNode(int x)
+void AddNode(unsigned int x)
 {
     struct BTreeNode *btrnTemp,*btrnParent;
     btrnTemp = btrnRoot; btrnParent = NULL;
@@ -342,7 +342,7 @@ void AddNode(int x)
         {
         btrnParent = btrnTemp;
 
-        btrnTemp = x < btrnTemp->iData ?
+        btrnTemp = x < btrnTemp->uiData ?
             btrnTemp->btrnLeftChild : btrnTemp->btrnRightChild;
         }
     btrnTemp = NewNode(x);
@@ -353,7 +353,7 @@ void AddNode(int x)
         return ;
         }
 
-    if (x < btrnParent->iData)
+    if (x < btrnParent->uiData)
         btrnParent->btrnLeftChild = btrnTemp;
     else
         btrnParent->btrnRightChild = btrnTemp;
@@ -378,7 +378,7 @@ void __fastcall TInorderNRThread::Execute(void)
     clock_t ckStart = clock();
 
     for (i = 0; i < uiNum; i++)
-        AddNode(iRandomData[i]);
+        AddNode(uiRandomData[i]);
     i = 0;
     InorderTraversalNR(btrnRoot);
 
@@ -388,7 +388,7 @@ void __fastcall TInorderNRThread::Execute(void)
     btrnRoot = NodeClear(btrnRoot);
 
     ShowResult();
-    DataClear(&iResultData);
+    DataClear(&uiResultData);
 
     Form1->lblCPUTime->Caption = "CPU Time(s) = " + FloatToStr(fCostTime);
     ButtonEnable(true);
@@ -398,7 +398,7 @@ void __fastcall TForm1::btInorderNRClick(TObject *Sender)
 {
     ButtonEnable(false);
 
-    iResultData = new int[uiNum];
+    uiResultData = new unsigned int[uiNum];
 
     lblCPUTime->Caption = "CPU Time(s) = Sorting ...";
 
@@ -418,24 +418,24 @@ void __fastcall TSelectionThread::Execute(void)
     clock_t ckStart = clock();
 
     for (i = 0; i < uiNum; i++)
-        iResultData[i] = iRandomData[i];
+        uiResultData[i] = uiRandomData[i];
 
     unsigned int uiMax;
     for (i = 0; i < uiNum; i++)
         {
         uiMax = i;
         for (j = i+1; j < uiNum; j++)
-            if (iResultData[j] < iResultData[uiMax])
+            if (uiResultData[j] < uiResultData[uiMax])
                 uiMax = j;
         if ( i != uiMax)
-            swap(iResultData[i], iResultData[uiMax]);
+            swap(uiResultData[i], uiResultData[uiMax]);
         }
 
     clock_t ckEnd = clock();
     float fCostTime = float(ckEnd - ckStart)/CLK_TCK;
 
     ShowResult();
-    DataClear(&iResultData);
+    DataClear(&uiResultData);
 
     Form1->lblCPUTime->Caption = "CPU Time(s) = " + FloatToStr(fCostTime);
     ButtonEnable(true);
@@ -445,12 +445,57 @@ void __fastcall TForm1::btSelectionClick(TObject *Sender)
 {
     ButtonEnable(false);
 
-    iResultData = new int[uiNum];
+    uiResultData = new unsigned int[uiNum];
 
     lblCPUTime->Caption = "CPU Time(s) = Sorting ...";
 
     TSelectionThread *SelectionThread;
     SelectionThread = new TSelectionThread();
+}
+//---------------------------------------------------------------------------
+//implementation Insertion Thread Constructor & Method
+__fastcall TInsertionThread::TInsertionThread(void):TThread(true)
+{
+    FreeOnTerminate = true;
+    Resume();
+}
+//---------------------------------------------------------------------------
+void __fastcall TInsertionThread::Execute(void)
+{
+    clock_t ckStart = clock();
+
+    for (i = 0; i < uiNum; i++)
+        uiResultData[i] = uiRandomData[i];
+
+    unsigned int uiTemp;
+    for (i = 1; i < uiNum; i++)
+        {
+        uiTemp = uiResultData[i];
+        for (j = i; j > 0 && uiTemp < uiResultData[j-1]; j--)
+            uiResultData[j] = uiResultData[j-1];
+        uiResultData[j] = uiTemp;
+        }
+
+    clock_t ckEnd = clock();
+    float fCostTime = float(ckEnd - ckStart)/CLK_TCK;
+
+    ShowResult();
+    DataClear(&uiResultData);
+
+    Form1->lblCPUTime->Caption = "CPU Time(s) = " + FloatToStr(fCostTime);
+    ButtonEnable(true);
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::btInsertionClick(TObject *Sender)
+{
+    ButtonEnable(false);
+
+    uiResultData = new unsigned int[uiNum];
+
+    lblCPUTime->Caption = "CPU Time(s) = Sorting ...";
+
+    TInsertionThread *InsertionThread;
+    InsertionThread = new TInsertionThread();
 }
 //---------------------------------------------------------------------------
 

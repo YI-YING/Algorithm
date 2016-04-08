@@ -39,6 +39,7 @@ __published:	// IDE-managed Components
     void __fastcall btInorderClick(TObject *Sender);
     void __fastcall btInorderNRClick(TObject *Sender);
     void __fastcall btSelectionClick(TObject *Sender);
+    void __fastcall btInsertionClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
     __fastcall TForm1(TComponent* Owner);
@@ -51,10 +52,10 @@ unsigned int i,j,k;
 unsigned int uiNum, uiRange;
 
 // Array input & result
-int* iRandomData, *iResultData;
+unsigned int *uiRandomData, *uiResultData;
 
 // Array heap
-int *iHeap;
+unsigned int *uiHeap;
 //---------------------------------------------------------------------------
 //declare Heap Thread, Inorder Thread
 class THeapThread:public TThread
@@ -89,4 +90,13 @@ class TSelectionThread:public TThread
         void __fastcall Execute(void);
     };
 //---------------------------------------------------------------------------
+class TInsertionThread:public TThread
+    {
+    public:
+        __fastcall TInsertionThread(void);
+    private:
+        void __fastcall Execute(void);
+    };
+//---------------------------------------------------------------------------
+
 #endif

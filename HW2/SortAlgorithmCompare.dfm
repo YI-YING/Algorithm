@@ -118,6 +118,7 @@ object Form1: TForm1
         Height = 41
         Caption = 'Insertion Sort'
         TabOrder = 4
+        OnClick = btInsertionClick
       end
       object btQuick: TButton
         Left = 336
