@@ -7,30 +7,31 @@
 #include <Controls.hpp>
 #include <StdCtrls.hpp>
 #include <Forms.hpp>
+#include <ComCtrls.hpp>
 //---------------------------------------------------------------------------
 class TForm1 : public TForm
 {
 __published:	// IDE-managed Components
-    TLabel *lblCPUTime;
-    TLabel *lblNum;
-    TLabel *lblRange;
-    TEdit *edNum;
-    TEdit *edRange;
-    TMemo *Memo1;
-    TMemo *Memo2;
-    TLabel *Label4;
-    TCheckBox *cbShowData;
-    TCheckBox *cbShowResult;
+    TPageControl *PageControl1;
+    TTabSheet *TabSheet1;
+    TButton *btBubble;
     TButton *btHeap;
     TButton *btInorder;
     TButton *btInorderNR;
-    TButton *btSelection;
     TButton *btInsertion;
-    TButton *btBubble;
     TButton *btQuick;
     TButton *btRandom;
-    TLabel *lblRunLoop;
-    TEdit *edRunLoop;
+    TButton *btSelection;
+    TCheckBox *cbShowData;
+    TCheckBox *cbShowResult;
+    TEdit *edNum;
+    TEdit *edRange;
+    TLabel *Label4;
+    TLabel *lblCPUTime;
+    TLabel *lblNum;
+    TLabel *lblRange;
+    TMemo *Memo1;
+    TMemo *Memo2;
     void __fastcall edNumKeyPress(TObject *Sender, char &Key);
     void __fastcall edRangeKeyPress(TObject *Sender, char &Key);
     void __fastcall btRandomClick(TObject *Sender);
@@ -43,13 +44,22 @@ public:		// User declarations
 extern PACKAGE TForm1 *Form1;
 //---------------------------------------------------------------------------
 //define global variation
-int i,j,k;
-int iNum;
+unsigned int i,j,k;
+unsigned int uiNum, uiRange;
 
 // Array input & result
-int* iRandomData, iResultData;
+int* iRandomData, *iResultData;
 
 // Array heap
 int *iHeap;
+//---------------------------------------------------------------------------
+//宣告執行緒類別
+class TMyThread:public TThread
+{
+public:
+    __fastcall TMyThread(void);
+private:
+    void __fastcall Execute(void);
+};
 //---------------------------------------------------------------------------
 #endif
