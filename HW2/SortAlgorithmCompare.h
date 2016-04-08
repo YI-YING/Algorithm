@@ -38,6 +38,7 @@ __published:	// IDE-managed Components
     void __fastcall btHeapClick(TObject *Sender);
     void __fastcall btInorderClick(TObject *Sender);
     void __fastcall btInorderNRClick(TObject *Sender);
+    void __fastcall btSelectionClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
     __fastcall TForm1(TComponent* Owner);
@@ -76,6 +77,14 @@ class TInorderNRThread:public TThread
     {
     public:
         __fastcall TInorderNRThread(void);
+    private:
+        void __fastcall Execute(void);
+    };
+//---------------------------------------------------------------------------
+class TSelectionThread:public TThread
+    {
+    public:
+        __fastcall TSelectionThread(void);
     private:
         void __fastcall Execute(void);
     };

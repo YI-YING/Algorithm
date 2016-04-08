@@ -143,6 +143,7 @@ object Form1: TForm1
         Height = 41
         Caption = 'Selection Sort'
         TabOrder = 7
+        OnClick = btSelectionClick
       end
       object cbShowData: TCheckBox
         Left = 24

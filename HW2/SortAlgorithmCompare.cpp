@@ -154,13 +154,14 @@ void __fastcall THeapThread::Execute()
 
     clock_t ckEnd = clock();
     float fCostTime = float(ckEnd - ckStart)/CLK_TCK;
-    Form1->lblCPUTime->Caption = "CPU Time(s) = " + FloatToStr(fCostTime);
 
     DataClear(&iHeap);
 
-    ButtonEnable(true);
-
     ShowResult();
+    DataClear(&iResultData);
+
+    Form1->lblCPUTime->Caption = "CPU Time(s) = " + FloatToStr(fCostTime);
+    ButtonEnable(true);
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::btHeapClick(TObject *Sender)
@@ -169,8 +170,6 @@ void __fastcall TForm1::btHeapClick(TObject *Sender)
 
     iHeap = new int[uiNum+1];
 
-    if (iResultData != NULL)
-        DataClear(&iResultData);
     iResultData = new int[uiNum];
 
     lblCPUTime->Caption = "CPU Time(s) = Sorting ...";
@@ -238,9 +237,9 @@ struct BTreeNode *NodeClear(struct BTreeNode *node)
         node->btrnRightChild = NodeClear(node->btrnRightChild);
 
         node = DeleteNode(node);
-
-        return node;
         }
+
+    return node;
 }
 //---------------------------------------------------------------------------
 //implementation Inorder Thread Constructor & Method
@@ -261,21 +260,20 @@ void __fastcall TInorderThread::Execute()
 
     clock_t ckEnd = clock();
     float fCostTime = float(ckEnd - ckStart)/CLK_TCK;
-    Form1->lblCPUTime->Caption = "CPU Time(s) = " + FloatToStr(fCostTime);
 
     btrnRoot = NodeClear(btrnRoot);
 
-    ButtonEnable(true);
-
     ShowResult();
+    DataClear(&iResultData);
+
+    Form1->lblCPUTime->Caption = "CPU Time(s) = " + FloatToStr(fCostTime);
+    ButtonEnable(true);
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::btInorderClick(TObject *Sender)
 {
     ButtonEnable(false);
 
-    if (iResultData != NULL)
-        DataClear(&iResultData);
     iResultData = new int[uiNum];
 
     lblCPUTime->Caption = "CPU Time(s) = Sorting ...";
@@ -368,7 +366,7 @@ struct QueueNode
     struct BTreeNode *btrnTreeNode;
     };
 //---------------------------------------------------------------------------
-//implementation Inorder Thread Constructor & Method
+//implementation InorderNR Thread Constructor & Method
 __fastcall TInorderNRThread::TInorderNRThread(void):TThread(true)
 {
     FreeOnTerminate = true;
@@ -386,21 +384,20 @@ void __fastcall TInorderNRThread::Execute(void)
 
     clock_t ckEnd = clock();
     float fCostTime = float(ckEnd - ckStart)/CLK_TCK;
-    Form1->lblCPUTime->Caption = "CPU Time(s) = " + FloatToStr(fCostTime);
 
     btrnRoot = NodeClear(btrnRoot);
 
-    ButtonEnable(true);
-
     ShowResult();
+    DataClear(&iResultData);
+
+    Form1->lblCPUTime->Caption = "CPU Time(s) = " + FloatToStr(fCostTime);
+    ButtonEnable(true);
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::btInorderNRClick(TObject *Sender)
 {
     ButtonEnable(false);
 
-    if (iResultData != NULL)
-        DataClear(&iResultData);
     iResultData = new int[uiNum];
 
     lblCPUTime->Caption = "CPU Time(s) = Sorting ...";
@@ -409,5 +406,51 @@ void __fastcall TForm1::btInorderNRClick(TObject *Sender)
     InorderNRThread = new TInorderNRThread();
 }
 //---------------------------------------------------------------------------
+//implementation Selection Thread Constructor & Method
+__fastcall TSelectionThread::TSelectionThread(void):TThread(true)
+{
+    FreeOnTerminate = true;
+    Resume();
+}
+//---------------------------------------------------------------------------
+void __fastcall TSelectionThread::Execute(void)
+{
+    clock_t ckStart = clock();
 
+    for (i = 0; i < uiNum; i++)
+        iResultData[i] = iRandomData[i];
+
+    unsigned int uiMax;
+    for (i = 0; i < uiNum; i++)
+        {
+        uiMax = i;
+        for (j = i+1; j < uiNum; j++)
+            if (iResultData[j] < iResultData[uiMax])
+                uiMax = j;
+        if ( i != uiMax)
+            swap(iResultData[i], iResultData[uiMax]);
+        }
+
+    clock_t ckEnd = clock();
+    float fCostTime = float(ckEnd - ckStart)/CLK_TCK;
+
+    ShowResult();
+    DataClear(&iResultData);
+
+    Form1->lblCPUTime->Caption = "CPU Time(s) = " + FloatToStr(fCostTime);
+    ButtonEnable(true);
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::btSelectionClick(TObject *Sender)
+{
+    ButtonEnable(false);
+
+    iResultData = new int[uiNum];
+
+    lblCPUTime->Caption = "CPU Time(s) = Sorting ...";
+
+    TSelectionThread *SelectionThread;
+    SelectionThread = new TSelectionThread();
+}
+//---------------------------------------------------------------------------
 
