@@ -498,4 +498,45 @@ void __fastcall TForm1::btInsertionClick(TObject *Sender)
     InsertionThread = new TInsertionThread();
 }
 //---------------------------------------------------------------------------
+//implementation Bubble Thread Constructor & Method
+__fastcall TBubbleThread::TBubbleThread(void):TThread(true)
+{
+    FreeOnTerminate = true;
+    Resume();
+}
+//---------------------------------------------------------------------------
+void __fastcall TBubbleThread::Execute(void)
+{
+    clock_t ckStart = clock();
+
+    for (i = 0; i < uiNum; i++)
+        uiResultData[i] = uiRandomData[i];
+
+    for (i = 0; i < uiNum; i++)
+        for (j = 1; j < uiNum - i; j++)
+            if (uiResultData[j-1] > uiResultData[j])
+                swap(uiResultData[j-1], uiResultData[j]);
+
+    clock_t ckEnd = clock();
+    float fCostTime = float(ckEnd - ckStart)/CLK_TCK;
+
+    ShowResult();
+    DataClear(&uiResultData);
+
+    Form1->lblCPUTime->Caption = "CPU Time(s) = " + FloatToStr(fCostTime);
+    ButtonEnable(true);
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::btBubbleClick(TObject *Sender)
+{
+    ButtonEnable(false);
+
+    uiResultData = new unsigned int[uiNum];
+
+    lblCPUTime->Caption = "CPU Time(s) = Sorting ...";
+
+    TBubbleThread *BubbleThread;
+    BubbleThread = new TBubbleThread();
+}
+//---------------------------------------------------------------------------
 

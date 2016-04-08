@@ -83,6 +83,7 @@ object Form1: TForm1
         Height = 41
         Caption = 'Bubble Sort'
         TabOrder = 0
+        OnClick = btBubbleClick
       end
       object btHeap: TButton
         Left = 336
