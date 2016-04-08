@@ -539,4 +539,72 @@ void __fastcall TForm1::btBubbleClick(TObject *Sender)
     BubbleThread = new TBubbleThread();
 }
 //---------------------------------------------------------------------------
+//implementation Quick Thread Constructor & Method
+__fastcall TQuickThread::TQuickThread(void):TThread(true)
+{
+    FreeOnTerminate = true;
+    Resume();
+}
+//---------------------------------------------------------------------------
+//define function QuickSort
+void QuickSort(unsigned int data[],unsigned int left, unsigned int right)
+{
+    unsigned int uiTarget;
+    if (left < right)
+        {
+        i = left +1;
+        j = right;
+        uiTarget = data[left];
+
+        do
+            {
+            while (data[i] < uiTarget && i <= j)i++;
+            while (data[j] >= uiTarget && i <= j)j--;
+
+            if (i < j)
+                swap(data[i], data[j]);
+            }
+        while (i < j);
+
+        if (left < j)
+            swap(data[left],data[j]);
+
+        if (j != 0)
+            QuickSort(data,left, j-1);
+            
+        QuickSort(data,j+1, right);
+        }
+}
+//---------------------------------------------------------------------------
+void __fastcall TQuickThread::Execute(void)
+{
+    clock_t ckStart = clock();
+
+    for (i = 0; i < uiNum; i++)
+        uiResultData[i] = uiRandomData[i];
+
+    QuickSort(uiResultData,0,uiNum -1);
+
+    clock_t ckEnd = clock();
+    float fCostTime = float(ckEnd - ckStart)/CLK_TCK;
+
+    ShowResult();
+    DataClear(&uiResultData);
+
+    Form1->lblCPUTime->Caption = "CPU Time(s) = " + FloatToStr(fCostTime);
+    ButtonEnable(true);
+}
+//---------------------------------------------------------------------------
+void __fastcall TForm1::btQuickClick(TObject *Sender)
+{
+    ButtonEnable(false);
+
+    uiResultData = new unsigned int[uiNum];
+
+    lblCPUTime->Caption = "CPU Time(s) = Sorting ...";
+
+    TQuickThread *QuickThread;
+    QuickThread = new TQuickThread();
+}
+//---------------------------------------------------------------------------
 

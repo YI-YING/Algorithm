@@ -128,6 +128,7 @@ object Form1: TForm1
         Height = 41
         Caption = 'Quick Sort'
         TabOrder = 5
+        OnClick = btQuickClick
       end
       object btRandom: TButton
         Left = 250

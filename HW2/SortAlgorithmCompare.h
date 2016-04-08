@@ -41,6 +41,7 @@ __published:	// IDE-managed Components
     void __fastcall btSelectionClick(TObject *Sender);
     void __fastcall btInsertionClick(TObject *Sender);
     void __fastcall btBubbleClick(TObject *Sender);
+    void __fastcall btQuickClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
     __fastcall TForm1(TComponent* Owner);
@@ -103,6 +104,14 @@ class TBubbleThread:public TThread
     {
     public:
         __fastcall TBubbleThread(void);
+    private:
+        void __fastcall Execute(void);
+    };
+//---------------------------------------------------------------------------
+class TQuickThread:public TThread
+    {
+    public:
+        __fastcall TQuickThread(void);
     private:
         void __fastcall Execute(void);
     };
