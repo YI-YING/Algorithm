@@ -73,7 +73,7 @@ void __fastcall TfMST::btGenerateGClick(TObject *Sender)
         iGraphicArray = NULL;
         }
 
-//  如果已存在一 Edges 矩陣，先將其歸還系統
+//  如果已存在一 Edgea 矩陣，先將其歸還系統
     if (iEdgesArray != NULL)
         {
         DeleteEdges();
@@ -159,10 +159,39 @@ void PrintEdges()
         for (int j = 0; j < 3; j++)
             fMST->sgEdgesMatrix->Cells[j][i] = iEdgesArray[i+1][j];
 }
+/****************************************************************************
+ *declare Node
+ ****************************************************************************/
+ struct Dsnode
+    {
+    int iData;
+    struct Dsnode *dnParent;
+    };
+//---------------------------------------------------------------------------
+void MakeSet(struct Dsnode *node)
+{
+    node->dnParent = node;
+}
+//---------------------------------------------------------------------------
+struct Dsnode *Find(struct Dsnode *node)
+{
+    if (node->dnParent == node)
+        return node;
+    node->dnParent = Find(node->dnParent);
+    return node->dnParent;
+}
+//---------------------------------------------------------------------------
+void Union(struct Dsnode *x, struct Dsnode *y)
+{
+    struct Dsnode *xParent = Find(x);
+    struct Dsnode *yParent = Find(y);
+
+    xParent->dnParent = yParent;
+}
 //---------------------------------------------------------------------------
 void __fastcall TfMST::btKruscalClick(TObject *Sender)
 {
-//  如果已存在一 Edges 矩陣，先將其歸還系統
+//  如果已存在一 Edgea 矩陣，先將其歸還系統
     if (iEdgesArray != NULL)
         {
         DeleteEdges();
@@ -188,6 +217,119 @@ void __fastcall TfMST::btKruscalClick(TObject *Sender)
 
     for (int j = 1; j < iEdges+1; j++)
         InsertHeap(j);
+
+//  產生一陣列用來儲存 MST
+    int *iMSTArray = new int [iVertexNum -1];
+    int iMSTEdges = 0;
+
+//  產生用來判斷是否會造成迴圈的 Node 陣列
+    struct Dsnode *dVertex = new struct Dsnode [iVertexNum];
+    for (int i = 0; i < iVertexNum; i++)
+        {
+        dVertex[i].iData = i;
+        MakeSet(&dVertex[i]);
+        }
+
+    iCycleNum = 0;
+    int iMin;       //最小邊
+    int iU;         //最小邊起始
+    int iV;         //最小邊終點
+
+//  Kruscal Algorithm
+    while ((iMSTEdges < iVertexNum -1) && iHeapCount > 0)
+        {
+        iMin = DeleteHeap();
+        iU = iEdgesArray[iMin][0];
+        iV = iEdgesArray[iMin][1];
+        if (Find(&dVertex[iU]) != Find(&dVertex[iV]))
+            {
+            iMSTArray[iMSTEdges++] = iMin;
+            Union(&dVertex[iU], &dVertex[iV]);
+            }
+        else
+            iCycleNum++;
+        }
+
+//  印出 MST
+    if (cbPrintEdges->Checked)
+        {
+        if (iMSTEdges < iVertexNum -1)
+            Memo1->Lines->Add("無延展樹");
+        else
+            {
+            for (int i = 0; i < iVertexNum -1; i++)
+                {
+                iU = iEdgesArray[iMSTArray[i]][0];
+                iV = iEdgesArray[iMSTArray[i]][1];
+                Memo1->Lines->Add("edge "+ IntToStr(i) + ": (" + IntToStr(iU)
+                    + "," + IntToStr(iV) + ") [" + IntToStr(iMSTArray[i]) + "]");
+                }
+            }
+        Memo1->Lines->Add("# edges incurring cycles : " + IntToStr(iCycleNum));
+        }
+
+    delete[] iMSTArray, dVertex;
+}
+//---------------------------------------------------------------------------
+void __fastcall TfMST::btPrimClick(TObject *Sender)
+{
+    int *iC1 = new int [iVertexNum];        //記錄由誰連出
+    int *iC2 = new int [iVertexNum];        //紀錄 X 到 i 目前最短距離
+    int **iMSTArray = new int* [iVertexNum];//存放 MST Edges
+    int *iXSet = new int [iVertexNum];      //紀錄 X 已經有哪些點
+    int iX = 0;
+    int iXNum = 1;
+    int i;
+
+    for (i = 0; i < iVertexNum; i++)
+        {
+        iC1[i] = iX; iC2[i] = iWeightMax;
+        iXSet[i] = (i == 0)? 1: 0;
+        iMSTArray[i] = new int [2];
+        }
+
+//  Prim Algorithm
+    int iY;
+    while (iXNum < iVertexNum)
+        {
+        for (i = 0; i < iVertexNum; i++)
+            {
+            if (iXSet[i] == 1) continue;
+            if (iGraphicArray[iX][i] < iC2[i])
+                {
+                iC1[i] = iX; iC2[i] = iGraphicArray[iX][i];
+                }
+            }
+        iY = 0;
+        for (i = 0; i < iVertexNum; i++)
+            {
+            if (iXSet[i] == 1) continue;
+            if (iC2[i] < iC2[iY])
+                iY = i;
+            }
+        if (iC2[iY] == iWeightMax)
+            break;
+        iC2[iY] = iWeightMax;
+        iMSTArray[iXNum -1][0] = iC1[iY];
+        iMSTArray[iXNum -1][1] = iY;
+        iXSet[iY] = 1;
+        iX = iY; iXNum++;
+        }
+
+//  印出 MST
+    if (iXNum < iVertexNum)
+        Memo1->Lines->Add("無延展樹");
+    else
+        {
+        for (i = 0; i < iVertexNum -1; i++)
+            Memo1->Lines->Add("edge "+ IntToStr(i) + ": (" + IntToStr(iMSTArray[i][0])
+                + "," + IntToStr(iMSTArray[i][1]) + ")");
+        }
+
+//  記憶體管理
+    for (i = 0; i < iVertexNum; i++)
+        delete[] iMSTArray[i];
+    delete[] iC1,iC2,iXSet,iMSTArray;
 }
 //---------------------------------------------------------------------------
 

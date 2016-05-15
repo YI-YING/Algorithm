@@ -164,6 +164,7 @@ object fMST: TfMST
       Height = 49
       Caption = 'Prim'#39's algorithm'
       TabOrder = 1
+      OnClick = btPrimClick
     end
     object cbPrintEdges: TCheckBox
       Left = 32

@@ -37,6 +37,7 @@ __published:	// IDE-managed Components
     TStringGrid *sgEdgesMatrix;
     void __fastcall btGenerateGClick(TObject *Sender);
     void __fastcall btKruscalClick(TObject *Sender);
+    void __fastcall btPrimClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
         __fastcall TfMST(TComponent* Owner);
@@ -55,6 +56,7 @@ int iHeapCount;
 int *iHeapArray;
 //---------------------------------------------------------------------------
 //declare 統計資料
-int iEdges = 0;
+int iEdges;
+int iCycleNum;
 //---------------------------------------------------------------------------
 #endif
