@@ -159,7 +159,7 @@ object fMST: TfMST
     end
     object btPrim: TButton
       Left = 32
-      Top = 120
+      Top = 112
       Width = 338
       Height = 49
       Caption = 'Prim'#39's algorithm'
@@ -173,6 +173,14 @@ object fMST: TfMST
       Height = 25
       Caption = 'Echo print edges in MST'
       TabOrder = 2
+    end
+    object cbPrintEdgesMatrix: TCheckBox
+      Left = 32
+      Top = 174
+      Width = 217
+      Height = 25
+      Caption = 'Echo print Edges Matrix'
+      TabOrder = 3
     end
   end
   object pcOutput: TPageControl

@@ -1,6 +1,7 @@
 //---------------------------------------------------------------------------
 
 #include <vcl.h>
+#include <ctime.h>
 #include <algorithm.h>
 #pragma hdrstop
 
@@ -64,7 +65,21 @@ void PrintGraph()
             fMST->sgAjacentMatrix->Cells[j][i] = iGraphicArray[i][j];
 }
 //---------------------------------------------------------------------------
-void __fastcall TfMST::btGenerateGClick(TObject *Sender)
+//define function ButtonEnable
+void ButtonEnable(bool state)
+{
+    fMST->btGenerateG->Enabled = state;
+    fMST->btKruscal->Enabled = state;
+    fMST->btPrim->Enabled = state;
+}
+//---------------------------------------------------------------------------
+__fastcall TGenerateGThread::TGenerateGThread(void):TThread(true)
+{
+    FreeOnTerminate = true;
+    Resume();
+}
+//---------------------------------------------------------------------------
+void __fastcall TGenerateGThread::Execute()
 {
 //  如果已存在一相鄰矩陣，先將其歸還系統
     if (iGraphicArray != NULL)
@@ -81,20 +96,27 @@ void __fastcall TfMST::btGenerateGClick(TObject *Sender)
         }
 
 //  讀取使用者輸入
-    iVertexNum = StrToInt(edVertexNum->Text);
-    iWeightRange = StrToInt(edWeightRange->Text);
-    iWeightLimit = StrToInt(edWeightLimit->Text);
-    iWeightMax = StrToInt(edWeightMax->Text);
+    iVertexNum = StrToInt(fMST->edVertexNum->Text);
+    iWeightRange = StrToInt(fMST->edWeightRange->Text);
+    iWeightLimit = StrToInt(fMST->edWeightLimit->Text);
+    iWeightMax = StrToInt(fMST->edWeightMax->Text);
 
 //  產生相鄰矩陣
     GenerateGraph();
 
 //  顯示相鄰矩陣
-    if (cbPrintG->Checked)
+    if (fMST->cbPrintG->Checked)
         {
         PrintGraph();
         }
+    ButtonEnable(true);
+}
+//---------------------------------------------------------------------------
+void __fastcall TfMST::btGenerateGClick(TObject *Sender)
+{
+    ButtonEnable(false);
 
+    TGenerateGThread *GenerateThread = new TGenerateGThread();
 }
 /****************************************************************************
  *declare function which button Kruscal will use
@@ -188,9 +210,18 @@ void Union(struct Dsnode *x, struct Dsnode *y)
 
     xParent->dnParent = yParent;
 }
-//---------------------------------------------------------------------------
-void __fastcall TfMST::btKruscalClick(TObject *Sender)
+/****************************************************************************
+ *implementation Kruscal Thread Constructor & Method
+ ****************************************************************************/
+__fastcall TKruscalThread::TKruscalThread(void):TThread(true)
 {
+    FreeOnTerminate=true;
+    Resume();
+}
+//---------------------------------------------------------------------------
+void __fastcall TKruscalThread::Execute()
+{
+
 //  如果已存在一 Edgea 矩陣，先將其歸還系統
     if (iEdgesArray != NULL)
         {
@@ -198,11 +229,14 @@ void __fastcall TfMST::btKruscalClick(TObject *Sender)
         iEdgesArray = NULL;
         }
 
+    clock_t ckStart = clock();
+
 //  將相鄰矩陣轉換成 E x 3 矩陣
     GraphToEdges();
 
 //  印出 Edges 矩陣
-    PrintEdges();
+    if (fMST->cbPrintEdgesMatrix->Checked)
+        PrintEdges();
 
 //  如果已存在一 Heap 矩陣，先將其歸還系統
     if (iHeapArray != NULL)
@@ -250,29 +284,55 @@ void __fastcall TfMST::btKruscalClick(TObject *Sender)
             iCycleNum++;
         }
 
+    clock_t ckEnd = clock();
+
 //  印出 MST
-    if (cbPrintEdges->Checked)
+    if (fMST->cbPrintEdges->Checked)
         {
         if (iMSTEdges < iVertexNum -1)
-            Memo1->Lines->Add("無延展樹");
+            fMST->Memo1->Lines->Add("無延展樹");
         else
             {
             for (int i = 0; i < iVertexNum -1; i++)
                 {
                 iU = iEdgesArray[iMSTArray[i]][0];
                 iV = iEdgesArray[iMSTArray[i]][1];
-                Memo1->Lines->Add("edge "+ IntToStr(i) + ": (" + IntToStr(iU)
+                fMST->Memo1->Lines->Add("edge "+ IntToStr(i) + ": (" + IntToStr(iU)
                     + "," + IntToStr(iV) + ") [" + IntToStr(iMSTArray[i]) + "]");
                 }
             }
-        Memo1->Lines->Add("# edges incurring cycles : " + IntToStr(iCycleNum));
+        fMST->Memo1->Lines->Add("# edges incurring cycles : " + IntToStr(iCycleNum));
         }
 
+    float fCostTime = float(ckEnd - ckStart)/CLK_TCK;
+
+    fMST->Memo1->Lines->Add("Kruscal Algorithm used " + FloatToStr(fCostTime) +" (sec)");
+
+//  記憶體管理
     delete[] iMSTArray, dVertex;
+
+//  將按鈕狀態恢復
+    ButtonEnable(true);
 }
 //---------------------------------------------------------------------------
-void __fastcall TfMST::btPrimClick(TObject *Sender)
+void __fastcall TfMST::btKruscalClick(TObject *Sender)
 {
+    ButtonEnable(false);
+
+    TKruscalThread *KruscalThread;
+    KruscalThread = new TKruscalThread();
+}
+//---------------------------------------------------------------------------
+__fastcall TPrimThread::TPrimThread(void):TThread(true)
+{
+    FreeOnTerminate = true;
+    Resume();
+}
+//---------------------------------------------------------------------------
+void __fastcall TPrimThread::Execute()
+{
+    clock_t ckStart = clock();
+
     int *iC1 = new int [iVertexNum];        //記錄由誰連出
     int *iC2 = new int [iVertexNum];        //紀錄 X 到 i 目前最短距離
     int **iMSTArray = new int* [iVertexNum];//存放 MST Edges
@@ -316,20 +376,37 @@ void __fastcall TfMST::btPrimClick(TObject *Sender)
         iX = iY; iXNum++;
         }
 
+    clock_t ckEnd = clock();
+
 //  印出 MST
-    if (iXNum < iVertexNum)
-        Memo1->Lines->Add("無延展樹");
-    else
+    if (fMST->cbPrintEdges->Checked)
         {
-        for (i = 0; i < iVertexNum -1; i++)
-            Memo1->Lines->Add("edge "+ IntToStr(i) + ": (" + IntToStr(iMSTArray[i][0])
+        if (iXNum < iVertexNum)
+            fMST->Memo1->Lines->Add("無延展樹");
+        else
+            for (i = 0; i < iVertexNum -1; i++)
+                fMST->Memo1->Lines->Add("edge "+ IntToStr(i) + ": (" + IntToStr(iMSTArray[i][0])
                 + "," + IntToStr(iMSTArray[i][1]) + ")");
         }
+
+    float fCostTime = float(ckEnd - ckStart)/CLK_TCK;
+
+    fMST->Memo1->Lines->Add("Prim Algorithm used " + FloatToStr(fCostTime) + " (sec)");
 
 //  記憶體管理
     for (i = 0; i < iVertexNum; i++)
         delete[] iMSTArray[i];
     delete[] iC1,iC2,iXSet,iMSTArray;
+
+//  將按鈕狀態恢復
+    ButtonEnable(true);
+}
+//---------------------------------------------------------------------------
+void __fastcall TfMST::btPrimClick(TObject *Sender)
+{
+    ButtonEnable(false);
+
+    TPrimThread *PrimThread = new TPrimThread();
 }
 //---------------------------------------------------------------------------
 

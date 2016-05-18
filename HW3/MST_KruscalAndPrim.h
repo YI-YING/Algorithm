@@ -35,6 +35,7 @@ __published:	// IDE-managed Components
     TStringGrid *sgAjacentMatrix;
     TTabSheet *tbEdgesMatrix;
     TStringGrid *sgEdgesMatrix;
+    TCheckBox *cbPrintEdgesMatrix;
     void __fastcall btGenerateGClick(TObject *Sender);
     void __fastcall btKruscalClick(TObject *Sender);
     void __fastcall btPrimClick(TObject *Sender);
@@ -58,5 +59,31 @@ int *iHeapArray;
 //declare 統計資料
 int iEdges;
 int iCycleNum;
+/****************************************************************************
+ *declare Thread Class
+ ****************************************************************************/
+ class TGenerateGThread:public TThread
+    {
+    public:
+        __fastcall TGenerateGThread(void);
+    private:
+        void __fastcall Execute(void);
+    };
+//---------------------------------------------------------------------------
+ class TKruscalThread:public TThread
+    {
+    public:
+        __fastcall TKruscalThread(void);
+    private:
+        void __fastcall Execute(void);
+    };
+//---------------------------------------------------------------------------
+class TPrimThread:public TThread
+    {
+    public:
+        __fastcall TPrimThread(void);
+    private:
+        void __fastcall Execute(void);
+    };
 //---------------------------------------------------------------------------
 #endif
