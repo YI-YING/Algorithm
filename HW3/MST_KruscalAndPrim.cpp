@@ -43,7 +43,7 @@ void GenerateGraph()
     for (int i = 0; i < iVertexNum; i++)
         for (int j = i; j < iVertexNum; j++)
             {
-            k = rand()%100 +1;
+            k = rand()%iWeightRange +1;
 
             iGraphicArray[i][j] = (k > iWeightLimit)? iWeightMax : k;
 
