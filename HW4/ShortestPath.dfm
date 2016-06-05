@@ -1,6 +1,6 @@
 object fShowtestPath: TfShowtestPath
-  Left = 181
-  Top = 65
+  Left = 202
+  Top = 101
   Width = 973
   Height = 621
   Caption = 'Showtest Path by YI-YING 2016/5/25'
@@ -13,6 +13,81 @@ object fShowtestPath: TfShowtestPath
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
+  object pcOutput: TPageControl
+    Left = 337
+    Top = 0
+    Width = 620
+    Height = 582
+    ActivePage = tsSolutions
+    Align = alClient
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentFont = False
+    TabIndex = 0
+    TabOrder = 1
+    object tsSolutions: TTabSheet
+      Caption = 'Solutions'
+      object memSolutions: TMemo
+        Left = 0
+        Top = 0
+        Width = 612
+        Height = 547
+        Align = alClient
+        TabOrder = 0
+      end
+    end
+    object tsAjacentMatrix: TTabSheet
+      Caption = 'G in ajacent Matrix'
+      ImageIndex = 1
+      object sgAjacentMatrix: TStringGrid
+        Left = 0
+        Top = 0
+        Width = 612
+        Height = 548
+        Align = alClient
+        TabOrder = 0
+      end
+    end
+    object TabSheet2: TTabSheet
+      Caption = 'SSAD Tables'
+      ImageIndex = 5
+      object sgSSADTables: TStringGrid
+        Left = 0
+        Top = 0
+        Width = 612
+        Height = 547
+        Align = alClient
+        TabOrder = 0
+      end
+    end
+    object tsShortestPaths: TTabSheet
+      Caption = 'Costs of all pairs shortest paths'
+      ImageIndex = 2
+      object sgShortestPaths: TStringGrid
+        Left = 0
+        Top = 0
+        Width = 612
+        Height = 548
+        Align = alClient
+        TabOrder = 0
+      end
+    end
+    object tsTransitiveClosure: TTabSheet
+      Caption = 'Transitive closure'
+      ImageIndex = 3
+      object sgTransitiveClosure: TStringGrid
+        Left = 0
+        Top = 0
+        Width = 612
+        Height = 548
+        Align = alClient
+        TabOrder = 0
+      end
+    end
+  end
   object panlControl: TPanel
     Left = 0
     Top = 0
@@ -182,6 +257,7 @@ object fShowtestPath: TfShowtestPath
         Font.Style = []
         ParentFont = False
         TabOrder = 5
+        OnClick = btGenerateGClick
       end
       object cbUndirectedG: TCheckBox
         Left = 23
@@ -189,12 +265,14 @@ object fShowtestPath: TfShowtestPath
         Width = 119
         Height = 17
         Caption = 'Undirected G'
+        Checked = True
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -16
         Font.Name = 'MS Sans Serif'
         Font.Style = []
         ParentFont = False
+        State = cbChecked
         TabOrder = 6
       end
       object cbPrintG: TCheckBox
@@ -239,6 +317,7 @@ object fShowtestPath: TfShowtestPath
         Font.Style = []
         ParentFont = False
         TabOrder = 0
+        OnClick = btSingleSourceClick
       end
       object btAllPairs: TButton
         Left = 26
@@ -281,69 +360,6 @@ object fShowtestPath: TfShowtestPath
         Font.Style = []
         ParentFont = False
         TabOrder = 3
-      end
-    end
-  end
-  object pcOutput: TPageControl
-    Left = 337
-    Top = 0
-    Width = 620
-    Height = 582
-    ActivePage = tsTransitiveClosure
-    Align = alClient
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -16
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    ParentFont = False
-    TabIndex = 3
-    TabOrder = 1
-    object tsSolutions: TTabSheet
-      Caption = 'Solutions'
-      object memSolutions: TMemo
-        Left = 0
-        Top = 0
-        Width = 612
-        Height = 547
-        Align = alClient
-        TabOrder = 0
-      end
-    end
-    object tsAjacentMatrix: TTabSheet
-      Caption = 'G in ajacent Matrix'
-      ImageIndex = 1
-      object sgAjacentMatrix: TStringGrid
-        Left = 0
-        Top = 0
-        Width = 612
-        Height = 547
-        Align = alClient
-        TabOrder = 0
-      end
-    end
-    object tsShortestPaths: TTabSheet
-      Caption = 'Costs of all pairs shortest paths'
-      ImageIndex = 2
-      object sgShortestPaths: TStringGrid
-        Left = 0
-        Top = 0
-        Width = 612
-        Height = 547
-        Align = alClient
-        TabOrder = 0
-      end
-    end
-    object tsTransitiveClosure: TTabSheet
-      Caption = 'Transitive closure'
-      ImageIndex = 3
-      object sgTransitiveClosure: TStringGrid
-        Left = 0
-        Top = 0
-        Width = 612
-        Height = 547
-        Align = alClient
-        TabOrder = 0
       end
     end
   end

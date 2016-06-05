@@ -43,11 +43,23 @@ __published:	// IDE-managed Components
     TStringGrid *sgAjacentMatrix;
     TStringGrid *sgShortestPaths;
     TStringGrid *sgTransitiveClosure;
+    TTabSheet *TabSheet2;
+    TStringGrid *sgSSADTables;
+    void __fastcall btGenerateGClick(TObject *Sender);
+    void __fastcall btSingleSourceClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
     __fastcall TfShowtestPath(TComponent* Owner);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TfShowtestPath *fShowtestPath;
-//---------------------------------------------------------------------------
+/****************************************************************************
+ *办跑计
+ ****************************************************************************/
+//竊翴计ヘ舦絛瞅舦舦程癬﹍翴
+int iVertexNum,iRange,iWeightLimit,iWeightMax,iSource;
+
+//綟痻皚
+int **iGraphArray;
+
 #endif
