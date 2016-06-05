@@ -56,7 +56,7 @@
   <FILELIST>
       <FILE FILENAME="ProShowtestPath.res" FORMNAME="" UNITNAME="ProShowtestPath.res" CONTAINERID="ResTool" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="ProShowtestPath.cpp" FORMNAME="" UNITNAME="ProShowtestPath" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="ShortestPath.cpp" FORMNAME="fShowtestPath" UNITNAME="ShortestPath" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
+      <FILE FILENAME="ShortestPath.cpp" FORMNAME="fShortestPath" UNITNAME="ShortestPath" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

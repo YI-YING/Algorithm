@@ -8,9 +8,9 @@
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
-TfShowtestPath *fShowtestPath;
+TfShortestPath *fShortestPath;
 //---------------------------------------------------------------------------
-__fastcall TfShowtestPath::TfShowtestPath(TComponent* Owner)
+__fastcall TfShortestPath::TfShortestPath(TComponent* Owner)
     : TForm(Owner)
 {
 }
@@ -33,7 +33,7 @@ void GenerateGraph()
 //  無向圖相鄰矩陣
     int k;
     randomize();
-    if (fShowtestPath->cbUndirectedG->Checked)
+    if (fShortestPath->cbUndirectedG->Checked)
         {
         for (int i = 0; i < iVertexNum; i++)
             for (int j = 0; j < iVertexNum; j++)
@@ -64,9 +64,9 @@ void GenerateGraph()
 //---------------------------------------------------------------------------
 void PrintGraph()
 {
-    fShowtestPath->sgAjacentMatrix->CleanupInstance();
-    fShowtestPath->sgAjacentMatrix->ColCount = iVertexNum +1;
-    fShowtestPath->sgAjacentMatrix->RowCount = iVertexNum +1;
+    fShortestPath->sgAjacentMatrix->CleanupInstance();
+    fShortestPath->sgAjacentMatrix->ColCount = iVertexNum +1;
+    fShortestPath->sgAjacentMatrix->RowCount = iVertexNum +1;
 
     for (int i = 0; i < iVertexNum +1; i++)
         for (int j = 0; j < iVertexNum +1; j++)
@@ -74,15 +74,15 @@ void PrintGraph()
             if (i == 0 && j ==0) continue;
             
             if (i == 0)
-                fShowtestPath->sgAjacentMatrix->Cells[j][i] = j -1;
+                fShortestPath->sgAjacentMatrix->Cells[j][i] = j -1;
             else if (j == 0)
-                fShowtestPath->sgAjacentMatrix->Cells[j][i] = i -1;
+                fShortestPath->sgAjacentMatrix->Cells[j][i] = i -1;
             else
-                fShowtestPath->sgAjacentMatrix->Cells[j][i] = iGraphArray[i-1][j-1];
+                fShortestPath->sgAjacentMatrix->Cells[j][i] = iGraphArray[i-1][j-1];
             }
 }
 //---------------------------------------------------------------------------
-void __fastcall TfShowtestPath::btGenerateGClick(TObject *Sender)
+void __fastcall TfShortestPath::btGenerateGClick(TObject *Sender)
 {
 
 //  如果已經有一相鄰矩陣，將其歸還系統
@@ -107,52 +107,70 @@ void __fastcall TfShowtestPath::btGenerateGClick(TObject *Sender)
         PrintGraph();
 
 }
-//---------------------------------------------------------------------------
-void __fastcall TfShowtestPath::btSingleSourceClick(TObject *Sender)
+/****************************************************************************
+ *Single Source button 會使用到的 Function
+ ****************************************************************************/
+void FindDistance(int **iDistance)
 {
-//  讀取使用者輸入
-    iSource = StrToInt(edSource->Text);
-
-//  常用區域變數
-    int i,j,k;
-
-//  儲存距離的矩陣
-    int **iDistance = new int* [iVertexNum];
-    for (i = 0; i < iVertexNum; i++)
-        iDistance[i] = new int [iVertexNum];
-
-//  設定行標題
-    sgSSADTables->CleanupInstance();
-    sgSSADTables->ColCount = iVertexNum +2;
-    sgSSADTables->RowCount = iVertexNum +1;
-    for (i = 1; i < iVertexNum +2; i++)
+    for (int j = 0; j < iVertexNum; j++)
         {
-        if (i != iVertexNum +1)
-            sgSSADTables->Cells[i][0] = i -1;
-        else
-            sgSSADTables->Cells[i][0] = "from";
-        }
-
-//  設定列標題以及找出起點到其他點的距離
-    for (j = 0; j < iVertexNum; j++)
-        {
-        //找出起點到其他點的距離
         iDistance[j][0] = (j != iSource)? iGraphArray[iSource][j] : 0;
-        //sgSSADTables->Cells[1][j +1] = iDistance[j][0];
-
-        //設定列標題
-        sgSSADTables->Cells[0][j +1] = j;
 
         if ((iGraphArray[iSource][j] != iWeightMax) || (j == iSource))
-            sgSSADTables->Cells[iVertexNum +1][j +1] = iSource;
+            iDistance[j][iVertexNum] = iSource;
+        }
+}
+//---------------------------------------------------------------------------
+void PrintSSADTables(int **iDistance)
+{
+    int i,j;
+    String s;
+
+//  印出 Solutions
+    for (i = 0; i < iVertexNum; i++)
+        {
+        if (i == iSource)continue;
+        j = i;
+        s = "";
+        do
+            {
+            s = "--["+ IntToStr(iGraphArray[iDistance[j][iVertexNum]][j]) +
+                "]-->" + IntToStr(j) +s;
+            j = iDistance[j][iVertexNum];
+            }
+        while (j != iSource);
+
+        s = IntToStr(iSource) +s;
+        fShortestPath->memSolutions->Lines->Add("The Shortest distance from " +
+            IntToStr(iSource) + " to " + IntToStr(i) + " is " + IntToStr(iDistance[i][iVertexNum -1]) +" with path " +s);
         }
 
-//  產生一布林陣列 用以紀錄是否找到最小路徑
-    bool *bFound = new bool[iVertexNum];
-    for (i = 0; i < iVertexNum; i++)
-        bFound[i] = (i != iSource) ? false : true;
+//  印出 SSADTables
+    fShortestPath->sgSSADTables->CleanupInstance();
+    fShortestPath->sgSSADTables->ColCount = iVertexNum +2;
+    fShortestPath->sgSSADTables->RowCount = iVertexNum +1;
 
-//  開始尋找起點至其他點最短路徑
+    for (i = 1; i < iVertexNum +2; i++)
+        {
+        //設定行標題
+        if (i != iVertexNum +1)
+            fShortestPath->sgSSADTables->Cells[i][0] = i -1;
+        else
+            fShortestPath->sgSSADTables->Cells[i][0] = "from";
+
+        //設定列標題
+        if (i < iVertexNum +1)
+            fShortestPath->sgSSADTables->Cells[0][i] = i -1;
+        }
+    for (j = 0; j < iVertexNum; j++)
+        for (i = 0; i < iVertexNum +1; i++)
+            fShortestPath->sgSSADTables->Cells[i +1][j +1] = iDistance[j][i];
+}
+//---------------------------------------------------------------------------
+void FindSSADSolution(bool *bFound, int **iDistance)
+{
+    int i,j,k;
+
     i = 0;
     while (i < iVertexNum -1)
         {
@@ -174,13 +192,16 @@ void __fastcall TfShowtestPath::btSingleSourceClick(TObject *Sender)
             }
         bFound[k] = true;
 
+        if (fShortestPath->cbPrintResult->Checked)
+            fShortestPath->memSolutions->Lines->Add("min = " +IntToStr(k));
+
         //更新路徑距離
         for (j = 0; j < iVertexNum; j++)
             {
             if (!bFound[j])
                 {
                 if ((iDistance[k][i] + iGraphArray[k][j]) < iDistance[j][i])
-                    sgSSADTables->Cells[iVertexNum +1][j +1] = k;
+                    iDistance[j][iVertexNum] = k;
 
                 iDistance[j][i +1] = min(iDistance[j][i],
                     iDistance[k][i] + iGraphArray[k][j]);
@@ -190,13 +211,36 @@ void __fastcall TfShowtestPath::btSingleSourceClick(TObject *Sender)
             }
         i++;
         }
+}
+//---------------------------------------------------------------------------
+void __fastcall TfShortestPath::btSingleSourceClick(TObject *Sender)
+{
+//  讀取使用者輸入
+    iSource = StrToInt(edSource->Text);
+
+//  常用區域變數
+    int i,j;
+
+//  儲存距離的矩陣
+    int **iDistance = new int* [iVertexNum];
+    for (i = 0; i < iVertexNum; i++)
+        iDistance[i] = new int [iVertexNum +1];
+
+//  找出起點到其他點的距離
+    FindDistance(iDistance);
+
+//  產生一布林陣列 用以紀錄是否找到最小路徑
+    bool *bFound = new bool[iVertexNum];
+    for (i = 0; i < iVertexNum; i++)
+        bFound[i] = (i != iSource) ? false : true;
+
+//  開始尋找起點至其他點最短路徑
+    FindSSADSolution(bFound, iDistance);
 
 //  Print SSADTables
     if (cbPrintResult->Checked)
         {
-        for (j = 0; j < iVertexNum; j++)
-            for (i = 0; i < iVertexNum; i++)
-                sgSSADTables->Cells[i +1][j +1] = iDistance[j][i];
+        PrintSSADTables(iDistance);
         }
 
 //  記憶體管理

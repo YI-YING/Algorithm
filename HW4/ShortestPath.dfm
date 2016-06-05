@@ -1,4 +1,4 @@
-object fShowtestPath: TfShowtestPath
+object fShortestPath: TfShortestPath
   Left = 202
   Top = 101
   Width = 973
@@ -36,6 +36,7 @@ object fShowtestPath: TfShowtestPath
         Width = 612
         Height = 547
         Align = alClient
+        ScrollBars = ssBoth
         TabOrder = 0
       end
     end
@@ -281,12 +282,14 @@ object fShowtestPath: TfShowtestPath
         Width = 113
         Height = 17
         Caption = 'Echo print G'
+        Checked = True
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -16
         Font.Name = 'MS Sans Serif'
         Font.Style = []
         ParentFont = False
+        State = cbChecked
         TabOrder = 7
       end
     end
@@ -353,12 +356,14 @@ object fShowtestPath: TfShowtestPath
         Width = 108
         Height = 17
         Caption = 'Print Result'
+        Checked = True
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -16
         Font.Name = 'MS Sans Serif'
         Font.Style = []
         ParentFont = False
+        State = cbChecked
         TabOrder = 3
       end
     end

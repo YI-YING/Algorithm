@@ -3,14 +3,14 @@
 #include <vcl.h>
 #pragma hdrstop
 //---------------------------------------------------------------------------
-USEFORM("ShortestPath.cpp", fShowtestPath);
+USEFORM("ShortestPath.cpp", fShortestPath);
 //---------------------------------------------------------------------------
 WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     try
     {
          Application->Initialize();
-         Application->CreateForm(__classid(TfShowtestPath), &fShowtestPath);
+         Application->CreateForm(__classid(TfShortestPath), &fShortestPath);
          Application->Run();
     }
     catch (Exception &exception)

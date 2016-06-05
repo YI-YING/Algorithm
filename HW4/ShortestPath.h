@@ -11,7 +11,7 @@
 #include <ExtCtrls.hpp>
 #include <Grids.hpp>
 //---------------------------------------------------------------------------
-class TfShowtestPath : public TForm
+class TfShortestPath : public TForm
 {
 __published:	// IDE-managed Components
     TPanel *panlControl;
@@ -49,10 +49,10 @@ __published:	// IDE-managed Components
     void __fastcall btSingleSourceClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
-    __fastcall TfShowtestPath(TComponent* Owner);
+    __fastcall TfShortestPath(TComponent* Owner);
 };
 //---------------------------------------------------------------------------
-extern PACKAGE TfShowtestPath *fShowtestPath;
+extern PACKAGE TfShortestPath *fShortestPath;
 /****************************************************************************
  *宣告全域變數
  ****************************************************************************/
