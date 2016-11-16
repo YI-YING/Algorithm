@@ -18,7 +18,7 @@ object fShortestPath: TfShortestPath
     Top = 0
     Width = 620
     Height = 582
-    ActivePage = tsSolutions
+    ActivePage = tsAjacentMatrix
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -26,7 +26,7 @@ object fShortestPath: TfShortestPath
     Font.Name = 'MS Sans Serif'
     Font.Style = []
     ParentFont = False
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 1
     object tsSolutions: TTabSheet
       Caption = 'Solutions'
@@ -47,7 +47,7 @@ object fShortestPath: TfShortestPath
         Left = 0
         Top = 0
         Width = 612
-        Height = 548
+        Height = 547
         Align = alClient
         TabOrder = 0
       end
@@ -71,7 +71,7 @@ object fShortestPath: TfShortestPath
         Left = 0
         Top = 0
         Width = 612
-        Height = 548
+        Height = 547
         Align = alClient
         TabOrder = 0
       end
@@ -83,7 +83,7 @@ object fShortestPath: TfShortestPath
         Left = 0
         Top = 0
         Width = 612
-        Height = 548
+        Height = 547
         Align = alClient
         TabOrder = 0
       end
@@ -335,6 +335,7 @@ object fShortestPath: TfShortestPath
         Font.Style = []
         ParentFont = False
         TabOrder = 1
+        OnClick = btAllPairsClick
       end
       object btTransitiveClosure: TButton
         Left = 26

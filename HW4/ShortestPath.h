@@ -47,6 +47,7 @@ __published:	// IDE-managed Components
     TStringGrid *sgSSADTables;
     void __fastcall btGenerateGClick(TObject *Sender);
     void __fastcall btSingleSourceClick(TObject *Sender);
+    void __fastcall btAllPairsClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
     __fastcall TfShortestPath(TComponent* Owner);
@@ -61,5 +62,5 @@ int iVertexNum,iRange,iWeightLimit,iWeightMax,iSource;
 
 //¬Û¾F¯x°}
 int **iGraphArray;
-
+//---------------------------------------------------------------------------
 #endif

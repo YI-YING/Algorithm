@@ -250,5 +250,11 @@ void __fastcall TfShortestPath::btSingleSourceClick(TObject *Sender)
     delete[] bFound;
 }
 //---------------------------------------------------------------------------
+void __fastcall TfShortestPath::btAllPairsClick(TObject *Sender)
+{
+    int i;
 
+
+}
+//---------------------------------------------------------------------------
 
