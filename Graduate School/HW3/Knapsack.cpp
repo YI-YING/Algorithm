@@ -101,8 +101,8 @@ void  PrintItems() {
 
     for (int i = 1; i <= iItemNum; i++) {
         sgItems->Cells[i][0] = i;
-        sgItems->Cells[i][1] = iItems[0][i];
-        sgItems->Cells[i][2] = iItems[1][i];
+        sgItems->Cells[i][1] = iItems[0][i -1];
+        sgItems->Cells[i][2] = iItems[1][i -1];
     }
 
 }

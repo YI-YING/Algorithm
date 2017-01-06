@@ -38,6 +38,9 @@ __published:	// IDE-managed Components
     TButton *btBranchAndBound;
     TEdit *edProfitRange;
     TLabel *lblProfitRange;
+    TLabel *Label2;
+    TLabel *Label3;
+    TEdit *Edit1;
     void __fastcall edItemNumChange(TObject *Sender);
     void __fastcall edItemNumExit(TObject *Sender);
     void __fastcall btGenerateClick(TObject *Sender);

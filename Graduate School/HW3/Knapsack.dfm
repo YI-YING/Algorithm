@@ -1,7 +1,7 @@
 object fKnapsack: TfKnapsack
-  Left = 259
-  Top = 135
-  Width = 1284
+  Left = 250
+  Top = 101
+  Width = 1036
   Height = 675
   Caption = 
     '0/1 Knapsack Solved by Branch And Bound  created by YI-YING 2016' +
@@ -30,11 +30,11 @@ object fKnapsack: TfKnapsack
     Align = alLeft
     TabOrder = 0
     object Label1: TLabel
-      Left = 100
-      Top = 8
-      Width = 127
+      Left = 68
+      Top = 219
+      Width = 210
       Height = 24
-      Caption = 'Generate Items'
+      Caption = 'Generate Random Items'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -19
@@ -44,28 +44,28 @@ object fKnapsack: TfKnapsack
     end
     object lblItemNum: TLabel
       Left = 16
-      Top = 48
+      Top = 259
       Width = 91
       Height = 24
       Caption = 'Item Num: '
     end
     object lblWeightRange: TLabel
       Left = 16
-      Top = 87
+      Top = 298
       Width = 156
       Height = 24
       Caption = 'Weight Range: 1 ~'
     end
     object lblBagCapacity: TLabel
       Left = 16
-      Top = 172
+      Top = 383
       Width = 114
       Height = 24
       Caption = 'Bag Capacity:'
     end
     object Label5: TLabel
-      Left = 125
-      Top = 357
+      Left = 135
+      Top = 533
       Width = 68
       Height = 24
       Caption = 'Solution'
@@ -78,14 +78,34 @@ object fKnapsack: TfKnapsack
     end
     object lblProfitRange: TLabel
       Left = 16
-      Top = 127
+      Top = 338
       Width = 138
       Height = 24
       Caption = 'Profit Range: 1 ~'
     end
+    object Label2: TLabel
+      Left = 68
+      Top = 11
+      Width = 134
+      Height = 24
+      Caption = 'User Input Items'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -19
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label3: TLabel
+      Left = 16
+      Top = 52
+      Width = 109
+      Height = 24
+      Caption = 'Item Weight: '
+    end
     object btGenerate: TButton
       Left = 52
-      Top = 233
+      Top = 444
       Width = 215
       Height = 33
       Caption = 'Generate'
@@ -94,7 +114,7 @@ object fKnapsack: TfKnapsack
     end
     object edItemNum: TEdit
       Left = 185
-      Top = 42
+      Top = 253
       Width = 121
       Height = 32
       TabOrder = 0
@@ -105,7 +125,7 @@ object fKnapsack: TfKnapsack
     object edWeightRange: TEdit
       Tag = 1
       Left = 185
-      Top = 83
+      Top = 294
       Width = 121
       Height = 32
       TabOrder = 1
@@ -116,7 +136,7 @@ object fKnapsack: TfKnapsack
     object edBagCapacity: TEdit
       Tag = 3
       Left = 185
-      Top = 165
+      Top = 376
       Width = 121
       Height = 32
       TabOrder = 3
@@ -126,7 +146,7 @@ object fKnapsack: TfKnapsack
     end
     object cbPrintItems: TCheckBox
       Left = 16
-      Top = 289
+      Top = 500
       Width = 129
       Height = 17
       Caption = 'Print Items'
@@ -135,8 +155,8 @@ object fKnapsack: TfKnapsack
       TabOrder = 4
     end
     object btBranchAndBound: TButton
-      Left = 52
-      Top = 407
+      Left = 62
+      Top = 583
       Width = 215
       Height = 33
       Caption = 'Branch and Bound'
@@ -145,7 +165,7 @@ object fKnapsack: TfKnapsack
     object edProfitRange: TEdit
       Tag = 2
       Left = 185
-      Top = 123
+      Top = 334
       Width = 121
       Height = 32
       TabOrder = 2
@@ -153,18 +173,28 @@ object fKnapsack: TfKnapsack
       OnChange = edItemNumChange
       OnExit = edItemNumExit
     end
+    object Edit1: TEdit
+      Left = 185
+      Top = 46
+      Width = 121
+      Height = 32
+      TabOrder = 7
+      Text = '5'
+      OnChange = edItemNumChange
+      OnExit = edItemNumExit
+    end
   end
   object PRight: TPanel
     Left = 361
     Top = 0
-    Width = 907
+    Width = 659
     Height = 636
     Align = alClient
     TabOrder = 1
     object PageControl1: TPageControl
       Left = 1
       Top = 1
-      Width = 905
+      Width = 657
       Height = 634
       ActivePage = tsSolution
       Align = alClient
@@ -181,7 +211,7 @@ object fKnapsack: TfKnapsack
         object memSolution: TMemo
           Left = 0
           Top = 0
-          Width = 897
+          Width = 649
           Height = 595
           Align = alClient
           Font.Charset = DEFAULT_CHARSET
