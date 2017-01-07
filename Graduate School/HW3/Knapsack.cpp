@@ -134,6 +134,7 @@ void AddItems() {
 
 }
 //---------------------------------------------------------------------------
+//用來將 Item* 封裝
 typedef struct Wrap {
 
     Item *itm;
@@ -148,6 +149,7 @@ void  PrintItems() {
 
     sgItems->CleanupInstance();
     sgItems->RowCount = 4;
+
     sgItems->ColCount = iTotalNum + 1;
 
     sgItems->Cells[0][0] = "i";
@@ -164,6 +166,7 @@ void  PrintItems() {
 
 }
 //---------------------------------------------------------------------------
+//中序走訪樹並將結果存在 wrItems 陣列
 void InorderTraversal(Item *node, Wrap *answer,int &i) {
 
     if (node != NULL) {
@@ -186,7 +189,8 @@ void __fastcall TfKnapsack::btAddItemsClick(TObject *Sender)
     iWeightRange = StrToInt(edWeightRange->Text);
     iProfitRange = StrToInt(edProfitRange->Text);
 
-    //產生 Items 的重量以及價值
+    //亂數產生 Items 的重量以及價值
+    //並加入 itmRoot
     AddItems();
 
     //產生新的 wrItems 陣列
@@ -200,13 +204,103 @@ void __fastcall TfKnapsack::btAddItemsClick(TObject *Sender)
     if (cbPrintItems->Checked)
         PrintItems();
 
+    memSolution->Lines->Add(edItemNum->Text + " 筆亂數資料新增完成");
+
+}
+//---------------------------------------------------------------------------
+void __fastcall TfKnapsack::btAddItemClick(TObject *Sender)
+{
+    //如果已存在陣列 wrItems 將之清除
+    if (wrItems) {
+        delete[] wrItems;
+        wrItems = NULL;
+    }
+
+    //讀取使用者輸入
+    int iItemWeight = StrToInt(edItemWeight->Text);
+    int iItemProfit = StrToInt(edItemProfit->Text);
+
+    itmRoot = AddItem(itmRoot, iItemWeight, iItemProfit);
+
+    //產生新的 wrItems 陣列
+    iTotalNum += 1;    //用來計算現在總共有多少資料
+    wrItems = new Wrap [iTotalNum];
+
+    //用中序走訪樹並將結果存到 wrItems
+    InorderTraversal(itmRoot, wrItems, 0);
+
+    //顯示所有資料，由 CP 值高到低顯示
+    if (cbPrintItems->Checked)
+        PrintItems();
+
+    memSolution->Lines->Add("1 筆資料新增完成");
+
+}
+//---------------------------------------------------------------------------
+//遞迴刪除資料
+Item* ClearAll(Item *node) {
+
+    if (node != NULL) {
+        node->itmLeft = ClearAll(node->itmLeft);
+        node->itmRight = ClearAll(node->itmRight);
+
+        Item *itm = node;
+        node = NULL;
+        free(itm);
+
+        iTotalNum--;
+    }
+    return node;
+}
+//---------------------------------------------------------------------------
+void __fastcall TfKnapsack::btClearAllClick(TObject *Sender)
+{
+    //如果有資料就刪除
+    if (itmRoot) {
+        delete[] wrItems;
+        wrItems = NULL;
+
+        itmRoot = ClearAll(itmRoot);
+    }
+
+    PrintItems();
+    memSolution->Lines->Add("資料已清空");
+
+}
+//---------------------------------------------------------------------------
+typedef struct Node {
+
+    int iLevel;
+    int iWeight;
+    int iProfit;
+} Node;
+
+Node *ndHeapArray;
+int iHeapCount;
+//---------------------------------------------------------------------------
+void InsertHeap(Node u) {
+
+    iHeapCount++;
+    int i = iHeapCount;
+
+    while ((i > 1) &&
 }
 //---------------------------------------------------------------------------
 void __fastcall TfKnapsack::btBranchAndBoundClick(TObject *Sender)
 {
+    if (ndHeapArray) {
+        delete[] ndHeapArray;
+        ndHeapArray = NULL;
+    }
 
     //讀入背包限制
     iBagCapacity = StrToInt(edBagCapacity->Text);
+
+    //產生 Heap 陣列
+    iHeapCount = 0;
+    ndHeapArray = new Node[iTotalNum +1];
+
+
 
 }
 //---------------------------------------------------------------------------

@@ -48,6 +48,8 @@ __published:	// IDE-managed Components
     void __fastcall edItemNumChange(TObject *Sender);
     void __fastcall edItemNumExit(TObject *Sender);
     void __fastcall btAddItemsClick(TObject *Sender);
+    void __fastcall btAddItemClick(TObject *Sender);
+    void __fastcall btClearAllClick(TObject *Sender);
     void __fastcall btBranchAndBoundClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations

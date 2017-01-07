@@ -210,6 +210,7 @@ object fKnapsack: TfKnapsack
       Height = 33
       Caption = 'Add Item'
       TabOrder = 9
+      OnClick = btAddItemClick
     end
     object btClearAll: TButton
       Left = 56
@@ -218,6 +219,7 @@ object fKnapsack: TfKnapsack
       Height = 33
       Caption = 'Clear All'
       TabOrder = 10
+      OnClick = btClearAllClick
     end
   end
   object PRight: TPanel
