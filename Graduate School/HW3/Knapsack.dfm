@@ -31,8 +31,8 @@ object fKnapsack: TfKnapsack
     TabOrder = 0
     object Label1: TLabel
       Left = 68
-      Top = 219
-      Width = 210
+      Top = 8
+      Width = 204
       Height = 24
       Caption = 'Generate Random Items'
       Font.Charset = DEFAULT_CHARSET
@@ -44,28 +44,28 @@ object fKnapsack: TfKnapsack
     end
     object lblItemNum: TLabel
       Left = 16
-      Top = 259
+      Top = 48
       Width = 91
       Height = 24
       Caption = 'Item Num: '
     end
     object lblWeightRange: TLabel
       Left = 16
-      Top = 298
+      Top = 87
       Width = 156
       Height = 24
       Caption = 'Weight Range: 1 ~'
     end
     object lblBagCapacity: TLabel
       Left = 16
-      Top = 383
+      Top = 533
       Width = 114
       Height = 24
       Caption = 'Bag Capacity:'
     end
     object Label5: TLabel
-      Left = 135
-      Top = 533
+      Left = 120
+      Top = 480
       Width = 68
       Height = 24
       Caption = 'Solution'
@@ -78,14 +78,14 @@ object fKnapsack: TfKnapsack
     end
     object lblProfitRange: TLabel
       Left = 16
-      Top = 338
+      Top = 127
       Width = 138
       Height = 24
       Caption = 'Profit Range: 1 ~'
     end
-    object Label2: TLabel
+    object lblUserInput: TLabel
       Left = 68
-      Top = 11
+      Top = 261
       Width = 134
       Height = 24
       Caption = 'User Input Items'
@@ -96,25 +96,32 @@ object fKnapsack: TfKnapsack
       Font.Style = []
       ParentFont = False
     end
-    object Label3: TLabel
+    object lblItemWeight: TLabel
       Left = 16
-      Top = 52
+      Top = 302
       Width = 109
       Height = 24
       Caption = 'Item Weight: '
     end
-    object btGenerate: TButton
+    object lblItemProfit: TLabel
+      Left = 16
+      Top = 341
+      Width = 91
+      Height = 24
+      Caption = 'Item Profit: '
+    end
+    object btAddItems: TButton
       Left = 52
-      Top = 444
+      Top = 167
       Width = 215
       Height = 33
-      Caption = 'Generate'
+      Caption = 'Add Items'
       TabOrder = 5
-      OnClick = btGenerateClick
+      OnClick = btAddItemsClick
     end
     object edItemNum: TEdit
       Left = 185
-      Top = 253
+      Top = 42
       Width = 121
       Height = 32
       TabOrder = 0
@@ -125,7 +132,7 @@ object fKnapsack: TfKnapsack
     object edWeightRange: TEdit
       Tag = 1
       Left = 185
-      Top = 294
+      Top = 83
       Width = 121
       Height = 32
       TabOrder = 1
@@ -136,7 +143,7 @@ object fKnapsack: TfKnapsack
     object edBagCapacity: TEdit
       Tag = 3
       Left = 185
-      Top = 376
+      Top = 526
       Width = 121
       Height = 32
       TabOrder = 3
@@ -146,7 +153,7 @@ object fKnapsack: TfKnapsack
     end
     object cbPrintItems: TCheckBox
       Left = 16
-      Top = 500
+      Top = 223
       Width = 129
       Height = 17
       Caption = 'Print Items'
@@ -155,17 +162,18 @@ object fKnapsack: TfKnapsack
       TabOrder = 4
     end
     object btBranchAndBound: TButton
-      Left = 62
-      Top = 583
+      Left = 56
+      Top = 575
       Width = 215
       Height = 33
       Caption = 'Branch and Bound'
       TabOrder = 6
+      OnClick = btBranchAndBoundClick
     end
     object edProfitRange: TEdit
       Tag = 2
       Left = 185
-      Top = 334
+      Top = 123
       Width = 121
       Height = 32
       TabOrder = 2
@@ -173,15 +181,43 @@ object fKnapsack: TfKnapsack
       OnChange = edItemNumChange
       OnExit = edItemNumExit
     end
-    object Edit1: TEdit
+    object edItemWeight: TEdit
+      Tag = 4
       Left = 185
-      Top = 46
+      Top = 296
       Width = 121
       Height = 32
       TabOrder = 7
+      Text = '10'
+      OnChange = edItemNumChange
+      OnExit = edItemNumExit
+    end
+    object edItemProfit: TEdit
+      Tag = 5
+      Left = 185
+      Top = 336
+      Width = 121
+      Height = 32
+      TabOrder = 8
       Text = '5'
       OnChange = edItemNumChange
       OnExit = edItemNumExit
+    end
+    object btAddItem: TButton
+      Left = 56
+      Top = 385
+      Width = 215
+      Height = 33
+      Caption = 'Add Item'
+      TabOrder = 9
+    end
+    object btClearAll: TButton
+      Left = 56
+      Top = 432
+      Width = 215
+      Height = 33
+      Caption = 'Clear All'
+      TabOrder = 10
     end
   end
   object PRight: TPanel
@@ -231,7 +267,7 @@ object fKnapsack: TfKnapsack
         object sgItems: TStringGrid
           Left = 0
           Top = 0
-          Width = 897
+          Width = 649
           Height = 595
           Align = alClient
           TabOrder = 0

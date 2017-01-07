@@ -26,7 +26,7 @@ __published:	// IDE-managed Components
     TMemo *memSolution;
     TStringGrid *sgItems;
     TLabel *Label1;
-    TButton *btGenerate;
+    TButton *btAddItems;
     TLabel *lblItemNum;
     TLabel *lblWeightRange;
     TEdit *edItemNum;
@@ -38,12 +38,17 @@ __published:	// IDE-managed Components
     TButton *btBranchAndBound;
     TEdit *edProfitRange;
     TLabel *lblProfitRange;
-    TLabel *Label2;
-    TLabel *Label3;
-    TEdit *Edit1;
+    TLabel *lblUserInput;
+    TLabel *lblItemWeight;
+    TEdit *edItemWeight;
+    TLabel *lblItemProfit;
+    TEdit *edItemProfit;
+    TButton *btAddItem;
+    TButton *btClearAll;
     void __fastcall edItemNumChange(TObject *Sender);
     void __fastcall edItemNumExit(TObject *Sender);
-    void __fastcall btGenerateClick(TObject *Sender);
+    void __fastcall btAddItemsClick(TObject *Sender);
+    void __fastcall btBranchAndBoundClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
     __fastcall TfKnapsack(TComponent* Owner);
@@ -56,7 +61,8 @@ extern PACKAGE TfKnapsack *fKnapsack;
 //declare input
 int iItemNum, iWeightRange, iProfitRange, iBagCapacity;
 
-//declare dynamic Weights, Profits Array
-int **iItems;
+//declare Total Item Num
+int iTotalNum = 0;
+
 //---------------------------------------------------------------------------
 #endif
