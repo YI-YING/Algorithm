@@ -2,6 +2,7 @@
 
 #include <vcl.h>
 #include <climits>
+#include <algorithm.h>
 #pragma hdrstop
 
 #include "Knapsack.h"
@@ -268,11 +269,15 @@ void __fastcall TfKnapsack::btClearAllClick(TObject *Sender)
 
 }
 //---------------------------------------------------------------------------
+//宣告 Heap Array 需要的 Node
 typedef struct Node {
 
     int iLevel;
-    int iWeight;
-    int iProfit;
+    int iUpperBound;
+    int iLowerBound;
+    int iNowProfit;
+    int iNowWeight;
+
 } Node;
 
 Node *ndHeapArray;
@@ -283,11 +288,87 @@ void InsertHeap(Node u) {
     iHeapCount++;
     int i = iHeapCount;
 
-    while ((i > 1) &&
+    while ((i > 1) && u.iUpperBound > ndHeapArray[i/2].iUpperBound) {
+        ndHeapArray[i] = ndHeapArray[i/2];
+        i /= 2;
+    }
+
+    ndHeapArray[i] = u;
+}
+//---------------------------------------------------------------------------
+Node DeleteHeap() {
+
+    Node x = ndHeapArray[1];
+    ndHeapArray[1] = ndHeapArray[iHeapCount];
+    iHeapCount--;
+
+    int i = 1, j;
+
+    while (i <= iHeapCount/2) {
+        j = (ndHeapArray[2*i].iUpperBound > ndHeapArray[2*i +1].iUpperBound)
+            ? 2*i : 2*i +1;
+
+        if (ndHeapArray[i].iUpperBound > ndHeapArray[j].iUpperBound)
+            break;
+
+        swap(ndHeapArray[i], ndHeapArray[j]);
+
+        i = j;
+    }
+
+    return x;
+
+}
+//---------------------------------------------------------------------------
+//找出 Upper Bound 與 LowerBound
+int UpperBound(Node u) {
+
+    int i = u.iLevel +1;
+    Item *itm;
+
+    while (i < iTotalNum) {
+        itm = wrItems[i].itm;
+
+        if (u.iNowWeight + itm->iWeight > iBagCapacity)
+            break;
+
+        u.iNowProfit += itm->iProfit;
+        u.iNowWeight += itm->iWeight;
+        i++;
+
+    }
+
+    return -u.iNowProfit;
+}
+//---------------------------------------------------------------------------
+int LowerBound(Node u) {
+
+    int i = u.iLevel +1;
+    Item *itm;
+
+    while (i < iTotalNum) {
+        itm = wrItems[i].itm;
+
+        if (u.iNowWeight + itm->iWeight > iBagCapacity) {
+            float fTemp = float(iBagCapacity - u.iNowWeight) / itm->iWeight * itm->iProfit;
+            u.iNowProfit += fTemp;
+
+
+            break;
+        }
+
+        u.iNowProfit += itm->iProfit;
+        u.iNowWeight += itm->iWeight;
+        i++;
+
+    }
+
+    return -u.iNowProfit;
 }
 //---------------------------------------------------------------------------
 void __fastcall TfKnapsack::btBranchAndBoundClick(TObject *Sender)
 {
+    //如果已存在 ndHeapArray 先清除
     if (ndHeapArray) {
         delete[] ndHeapArray;
         ndHeapArray = NULL;
@@ -300,7 +381,64 @@ void __fastcall TfKnapsack::btBranchAndBoundClick(TObject *Sender)
     iHeapCount = 0;
     ndHeapArray = new Node[iTotalNum +1];
 
+    //產生 Heap 的第一個節點
+    Node u, v;
+    u.iLevel = -1;
+    u.iNowProfit = 0;
+    u.iNowWeight = 0;
+    u.iUpperBound = UpperBound(u);
+    u.iLowerBound = LowerBound(u);
 
+    InsertHeap(u);
+
+    Item *itm;
+    int iNowUpper = INT_MAX;
+
+    while (iHeapCount > 0) {
+        u = DeleteHeap();
+
+        if (u.iLevel == iTotalNum-1)
+            continue;
+
+        v.iLevel = u.iLevel +1;
+        itm = wrItems[v.iLevel].itm;
+
+        //現在的重量加下一個 Item 的重量沒超過限重
+        //才去計算 UpperBound 與 LowerBound
+        if (u.iNowWeight + itm->iWeight <= iBagCapacity) {
+
+            //拿這個東西
+            v.iNowProfit = u.iNowProfit + itm->iProfit;
+            v.iNowWeight = u.iNowWeight + itm->iWeight;
+            v.iUpperBound = UpperBound(v);
+            v.iLowerBound = LowerBound(v);
+
+
+            if (v.iUpperBound > v.iLowerBound && v.iLowerBound < iNowUpper)
+                InsertHeap(v);
+
+            if (v.iUpperBound < iNowUpper)
+                iNowUpper = v.iUpperBound;
+
+        }
+
+        //不拿這個東西
+        v.iNowProfit = u.iNowProfit;
+        v.iNowWeight = u.iNowWeight;
+        v.iUpperBound = UpperBound(v);
+        v.iLowerBound = LowerBound(v);
+
+        if (v.iUpperBound > v.iLowerBound && v.iLowerBound < iNowUpper)
+            InsertHeap(v);
+
+        if (v.iUpperBound < iNowUpper)
+            iNowUpper = v.iUpperBound;
+
+    }
+
+    memSolution->Lines->Add("----------------------------------------------");
+    memSolution->Lines->Add("Maximum possible profit:");
+    memSolution->Lines->Add(-iNowUpper);
 
 }
 //---------------------------------------------------------------------------
